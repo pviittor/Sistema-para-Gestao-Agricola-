@@ -1,0 +1,76 @@
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  IsNotEmpty,
+  IsInt,
+  MaxLength,
+  Validate,
+} from 'class-validator';
+import { CreateDto } from '../CreateDto';
+import { IsValidEnum } from '../../validators/IsValidEnum';
+import { CategoriaAtividadeOS } from '../../../models/enums/OrdemServicoEnums';
+
+/**
+ * CreateTipoAtividadeOSDto - DTO para criação de tipo de atividade de OS
+ */
+export class CreateTipoAtividadeOSDto extends CreateDto {
+  /**
+   * Nome do tipo de atividade
+   */
+  @IsNotEmpty({ message: 'Nome é obrigatório' })
+  @IsString({ message: 'Nome deve ser uma string' })
+  @MaxLength(100, { message: 'Nome deve ter no máximo 100 caracteres' })
+  nome!: string;
+
+  /**
+   * Descrição detalhada do tipo de atividade
+   */
+  @IsOptional()
+  @IsString({ message: 'Descrição deve ser uma string' })
+  descricao?: string;
+
+  /**
+   * Categoria da atividade
+   */
+  @IsNotEmpty({ message: 'Categoria é obrigatória' })
+  @Validate(IsValidEnum, [CategoriaAtividadeOS], { message: 'Categoria inválida. Use: AGRICOLA, PECUARIA, ADMINISTRATIVA ou MANUTENCAO' })
+  categoria!: CategoriaAtividadeOS;
+
+  /**
+   * Ícone representativo da atividade
+   */
+  @IsOptional()
+  @IsString({ message: 'Ícone deve ser uma string' })
+  @MaxLength(50, { message: 'Ícone deve ter no máximo 50 caracteres' })
+  icone?: string;
+
+  /**
+   * Cor em hexadecimal (#RRGGBB)
+   */
+  @IsOptional()
+  @IsString({ message: 'Cor deve ser uma string' })
+  @MaxLength(7, { message: 'Cor deve ter no máximo 7 caracteres' })
+  cor?: string;
+
+  /**
+   * Indica se o tipo de atividade está ativo
+   */
+  @IsOptional()
+  @IsBoolean({ message: 'Ativo deve ser um valor booleano' })
+  ativo?: boolean = true;
+
+  /**
+   * Plano de conta gerencial padrão para custeio
+   */
+  @IsOptional()
+  @IsInt({ message: 'planoContaIdPadrao deve ser um número inteiro' })
+  planoContaIdPadrao?: number;
+
+  /**
+   * Centro de custo padrão para custeio
+   */
+  @IsOptional()
+  @IsInt({ message: 'centroCustoIdPadrao deve ser um número inteiro' })
+  centroCustoIdPadrao?: number;
+}

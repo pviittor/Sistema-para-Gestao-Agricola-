@@ -1,0 +1,70 @@
+export enum AgreementType {
+  LOAN = 'LOAN',
+  RENT_LEASE = 'RENT_LEASE',
+  NON_CROP_REVENUE = 'NON_CROP_REVENUE',
+}
+
+export enum TermUnit {
+  YEAR = 'YEAR',
+  MONTH = 'MONTH',
+}
+
+export enum LoanType {
+  CUSTEIO = 'CUSTEIO',
+  INVESTIMENTO = 'INVESTIMENTO',
+  COMERCIALIZACAO = 'COMERCIALIZACAO',
+  CAPITAL_GIRO = 'CAPITAL_GIRO',
+  FINANCIAMENTO_RURAL = 'FINANCIAMENTO_RURAL',
+  CPR = 'CPR',
+  CREDITO_FUNDIARIO = 'CREDITO_FUNDIARIO',
+  OTHER = 'OTHER',
+}
+
+export enum PaymentMethod {
+  PRICE = 'PRICE',
+  SAC = 'SAC',
+  SACRE = 'SACRE',
+}
+
+export enum CurrencyUnit {
+  BRL = 'BRL',
+  SACA_SOJA = 'SACA_SOJA',
+  SACA_MILHO = 'SACA_MILHO',
+  SACA_CAFE = 'SACA_CAFE',
+  ARROBA_BOI = 'ARROBA_BOI',
+}
+
+export enum RevenueSource {
+  ARRENDAMENTO_PASTO = 'ARRENDAMENTO_PASTO',
+  ENERGIA_SOLAR = 'ENERGIA_SOLAR',
+  ENERGIA_EOLICA = 'ENERGIA_EOLICA',
+  MINERACAO = 'MINERACAO',
+  TURISMO_RURAL = 'TURISMO_RURAL',
+  APICULTURA = 'APICULTURA',
+  PISCICULTURA = 'PISCICULTURA',
+  SERVIDAO = 'SERVIDAO',
+  OTHER = 'OTHER',
+}
+
+export enum LeaseTermType {
+  BASE_RENT = 'BASE_RENT',
+  CROP_SHARE = 'CROP_SHARE',
+  YIELD_ADJUSTMENT = 'YIELD_ADJUSTMENT',
+  EXPENSE_SHARE = 'EXPENSE_SHARE',
+}
+
+export enum ExpenseCategory {
+  ALL = 'ALL',
+  INPUTS = 'INPUTS',
+  FERTILIZER = 'FERTILIZER',
+}
+
+export enum PaymentPeriod {
+  MONTH = 'MONTH',
+  YEAR = 'YEAR',
+}
+
+export enum AmountRate {
+  TOTAL = 'TOTAL',
+  PER_HECTARE = 'PER_HECTARE',
+}

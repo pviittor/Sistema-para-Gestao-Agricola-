@@ -1,0 +1,246 @@
+{
+  "table": {
+    "name": "C013_planoContaGerencial",
+    "singularName": "PlanoContaGerencial",
+    "pluralName": "PlanoContasGerenciais",
+    "description": "Plano de Contas Gerencial com estrutura hierárquica de 4 níveis",
+    "multiTenant": true,
+    "auditable": true,
+    "cacheable": true
+  },
+  "fields": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "required": true,
+      "unique": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID único da conta (auto-increment)"
+    },
+    {
+      "name": "tenantId",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "excludeFromResponse": false,
+      "comment": "ID do tenant ao qual a conta pertence"
+    },
+    {
+      "name": "item",
+      "type": "STRING",
+      "required": true,
+      "unique": true,
+      "comment": "Sequência lógica de números indicando os níveis da conta (ex: 1.0.0.0, 1.1.0.0, 1.1.1.0, 1.1.2.0)",
+      "validation": {
+        "min": 3,
+        "max": 50,
+        "pattern": "^\\d+\\.(\\d+\\.(\\d+\\.\\d+)?)?$"
+      }
+    },
+    {
+      "name": "descricao",
+      "type": "STRING",
+      "required": true,
+      "comment": "Descrição da conta (livre digitação)",
+      "validation": {
+        "min": 3,
+        "max": 255
+      }
+    },
+    {
+      "name": "tipo",
+      "type": "ENUM",
+      "required": true,
+      "comment": "Tipo da conta: Sintética ou Analítica",
+      "enumValues": ["SINTETICA", "ANALITICA"],
+      "defaultValue": "SINTETICA"
+    },
+    {
+      "name": "classificacao",
+      "type": "STRING",
+      "required": false,
+      "comment": "Classificação da conta (cadastro de classificação)",
+      "validation": {
+        "max": 100
+      }
+    },
+    {
+      "name": "contaPaiId",
+      "type": "INTEGER",
+      "required": false,
+      "comment": "ID da conta pai (para hierarquia). NULL para contas de primeiro nível",
+      "validation": {
+        "custom": "IsExists:PlanoContaGerencial,id"
+      }
+    },
+    {
+      "name": "nivel",
+      "type": "INTEGER",
+      "required": true,
+      "comment": "Nível hierárquico da conta (1 a 4)",
+      "validation": {
+        "min": 1,
+        "max": 4
+      },
+      "defaultValue": 1
+    },
+    {
+      "name": "ativo",
+      "type": "BOOLEAN",
+      "required": false,
+      "defaultValue": true,
+      "comment": "Se a conta está ativa"
+    },
+    {
+      "name": "usercreation",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID do usuário que criou o registro"
+    },
+    {
+      "name": "datecreation",
+      "type": "DATE",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "Data de criação do registro"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "belongsTo",
+      "target": "Usuario",
+      "foreignKey": "usercreation",
+      "as": "usuarioCriador",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Conta foi criada por um usuário"
+    },
+    {
+      "type": "belongsTo",
+      "target": "PlanoContaGerencial",
+      "foreignKey": "contaPaiId",
+      "as": "contaPai",
+      "required": false,
+      "onDelete": "SET NULL",
+      "comment": "Conta pai na hierarquia"
+    },
+    {
+      "type": "hasMany",
+      "target": "PlanoContaGerencial",
+      "foreignKey": "contaPaiId",
+      "as": "contasFilhas",
+      "comment": "Contas filhas na hierarquia"
+    }
+  ],
+  "permissions": {
+    "create": "planoContaGerencial.create",
+    "read": "planoContaGerencial.read",
+    "update": "planoContaGerencial.update",
+    "delete": "planoContaGerencial.delete"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 3600,
+    "keys": [
+      "planoContaGerencial:list:*",
+      "planoContaGerencial:findById:*",
+      "planoContaGerencial:findByNivel:*",
+      "planoContaGerencial:findByTipo:*",
+      "planoContaGerencial:findByContaPai:*"
+    ]
+  },
+  "businessRules": [
+    {
+      "type": "crossTenant",
+      "description": "Validar se contaPai pertence ao mesmo tenant",
+      "implementation": "No método create() e update() do Application Service, verificar se a contaPai pertence ao mesmo tenant antes de salvar. Lançar ForbiddenException se não pertencer ao mesmo tenant."
+    },
+    {
+      "type": "hierarchical",
+      "description": "Validar nível hierárquico baseado no item",
+      "implementation": "Calcular o nível automaticamente baseado no formato do item (quantidade de números separados por ponto). Validar que o nível está entre 1 e 4."
+    },
+    {
+      "type": "hierarchical",
+      "description": "Validar que contas analíticas não podem ter filhos",
+      "implementation": "Ao criar/atualizar conta analítica, verificar se não possui contas filhas. Ao tentar criar filha de conta analítica, lançar BadRequestException."
+    },
+    {
+      "type": "hierarchical",
+      "description": "Validar que apenas contas analíticas podem ter lançamentos",
+      "implementation": "Esta validação será feita no módulo de lançamentos financeiros, não aqui."
+    },
+    {
+      "type": "validation",
+      "description": "Validar formato do item",
+      "implementation": "Validar que o item segue o padrão de 4 níveis (ex: 1.0.0.0, 1.1.0.0, 1.1.1.0, 1.1.2.0). O nível é determinado pela quantidade de números não-zero após o primeiro."
+    }
+  ],
+  "customMethods": [
+    {
+      "name": "findByNivel",
+      "type": "repository",
+      "description": "Busca todas as contas de um nível específico",
+      "parameters": [
+        {
+          "name": "nivel",
+          "type": "number",
+          "required": true,
+          "description": "Nível hierárquico (1 a 4)"
+        }
+      ],
+      "returnType": "PlanoContaGerencial[]",
+      "cacheKey": "planoContaGerencial:findByNivel:{nivel}"
+    },
+    {
+      "name": "findByTipo",
+      "type": "repository",
+      "description": "Busca todas as contas de um tipo específico",
+      "parameters": [
+        {
+          "name": "tipo",
+          "type": "string",
+          "required": true,
+          "description": "Tipo da conta (SINTETICA ou ANALITICA)"
+        }
+      ],
+      "returnType": "PlanoContaGerencial[]",
+      "cacheKey": "planoContaGerencial:findByTipo:{tipo}"
+    },
+    {
+      "name": "findByContaPai",
+      "type": "repository",
+      "description": "Busca todas as contas filhas de uma conta pai",
+      "parameters": [
+        {
+          "name": "contaPaiId",
+          "type": "number",
+          "required": true,
+          "description": "ID da conta pai"
+        }
+      ],
+      "returnType": "PlanoContaGerencial[]",
+      "cacheKey": "planoContaGerencial:findByContaPai:{contaPaiId}"
+    },
+    {
+      "name": "findArvore",
+      "type": "repository",
+      "description": "Busca a árvore completa de contas a partir de uma conta raiz",
+      "parameters": [
+        {
+          "name": "contaId",
+          "type": "number",
+          "required": true,
+          "description": "ID da conta raiz"
+        }
+      ],
+      "returnType": "PlanoContaGerencial",
+      "cacheKey": "planoContaGerencial:findArvore:{contaId}"
+    }
+  ]
+}

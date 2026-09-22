@@ -1,0 +1,7 @@
+export { ParsedNfeDto } from './ParsedNfeDto'
+export { ParsedNfeItemDto } from './ParsedNfeItemDto'
+export { ParsedNfeDuplicataDto } from './ParsedNfeDuplicataDto'
+export { StatusServicoDto } from './StatusServicoDto'
+export { RetornoSefazDto } from './RetornoSefazDto'
+export { TransmitirNfeDto } from './TransmitirNfeDto'
+export { EmitirNfeResultDto } from './EmitirNfeResultDto'

@@ -1,0 +1,176 @@
+{
+  "description": "Payloads de exemplo para testar a API de GrupoProduto",
+  "endpoints": {
+    "POST /api/gruposProduto": {
+      "description": "Criar um novo grupo de produto",
+      "headers": {
+        "Authorization": "Bearer {token}",
+        "Content-Type": "application/json"
+      },
+      "examples": [
+        {
+          "name": "Grupo completo com abreviação",
+          "payload": {
+            "descricao_grupo": "Cereais e Grãos",
+            "abreviacao_grupo": "CG"
+          }
+        },
+        {
+          "name": "Grupo completo com abreviação longa",
+          "payload": {
+            "descricao_grupo": "Fertilizantes e Defensivos Agrícolas",
+            "abreviacao_grupo": "FERTDEF"
+          }
+        },
+        {
+          "name": "Grupo mínimo (sem abreviação)",
+          "payload": {
+            "descricao_grupo": "Sementes"
+          }
+        },
+        {
+          "name": "Grupo com descrição mínima (3 caracteres)",
+          "payload": {
+            "descricao_grupo": "Soj",
+            "abreviacao_grupo": "S"
+          }
+        },
+        {
+          "name": "Grupo com descrição máxima (255 caracteres)",
+          "payload": {
+            "descricao_grupo": "Grupo de produtos agrícolas destinados à produção de grãos, incluindo sementes, fertilizantes, defensivos, máquinas e equipamentos agrícolas, além de serviços relacionados à agricultura de precisão e consultoria técnica especializada em cultivos de alta produtividade",
+            "abreviacao_grupo": "AGRIC"
+          }
+        }
+      ]
+    },
+    "PUT /api/gruposProduto/:id": {
+      "description": "Atualizar um grupo de produto existente",
+      "headers": {
+        "Authorization": "Bearer {token}",
+        "Content-Type": "application/json"
+      },
+      "examples": [
+        {
+          "name": "Atualizar apenas descrição",
+          "payload": {
+            "descricao_grupo": "Cereais e Grãos Atualizado"
+          }
+        },
+        {
+          "name": "Atualizar apenas abreviação",
+          "payload": {
+            "abreviacao_grupo": "CGA"
+          }
+        },
+        {
+          "name": "Atualizar ambos os campos",
+          "payload": {
+            "descricao_grupo": "Cereais, Grãos e Sementes",
+            "abreviacao_grupo": "CGS"
+          }
+        },
+        {
+          "name": "Remover abreviação (enviar null)",
+          "payload": {
+            "abreviacao_grupo": null
+          }
+        }
+      ]
+    },
+    "GET /api/gruposProduto": {
+      "description": "Listar grupos de produto com paginação",
+      "headers": {
+        "Authorization": "Bearer {token}"
+      },
+      "queryParams": {
+        "page": "Número da página (padrão: 1)",
+        "limit": "Limite de registros por página (padrão: 10)"
+      },
+      "examples": [
+        {
+          "name": "Primeira página com 10 registros",
+          "url": "/api/gruposProduto?page=1&limit=10"
+        },
+        {
+          "name": "Segunda página com 20 registros",
+          "url": "/api/gruposProduto?page=2&limit=20"
+        },
+        {
+          "name": "Sem parâmetros (usa padrões)",
+          "url": "/api/gruposProduto"
+        }
+      ]
+    },
+    "GET /api/gruposProduto/:id": {
+      "description": "Buscar um grupo de produto por ID",
+      "headers": {
+        "Authorization": "Bearer {token}"
+      },
+      "examples": [
+        {
+          "name": "Buscar grupo com ID 1",
+          "url": "/api/gruposProduto/1"
+        },
+        {
+          "name": "Buscar grupo com ID 10",
+          "url": "/api/gruposProduto/10"
+        }
+      ]
+    },
+    "DELETE /api/gruposProduto/:id": {
+      "description": "Remover um grupo de produto",
+      "headers": {
+        "Authorization": "Bearer {token}"
+      },
+      "examples": [
+        {
+          "name": "Remover grupo com ID 1",
+          "url": "/api/gruposProduto/1",
+          "note": "Retorna 204 No Content em caso de sucesso"
+        }
+      ]
+    }
+  },
+  "validações": {
+    "descricao_grupo": {
+      "required": true,
+      "minLength": 3,
+      "maxLength": 255,
+      "type": "string"
+    },
+    "abreviacao_grupo": {
+      "required": false,
+      "minLength": 1,
+      "maxLength": 50,
+      "type": "string"
+    }
+  },
+  "exemplosErro": {
+    "descricao_grupo_vazia": {
+      "payload": {
+        "descricao_grupo": ""
+      },
+      "erroEsperado": "Descrição é obrigatória"
+    },
+    "descricao_grupo_muito_curta": {
+      "payload": {
+        "descricao_grupo": "AB"
+      },
+      "erroEsperado": "Descrição deve ter no mínimo 3 caracteres"
+    },
+    "descricao_grupo_muito_longa": {
+      "payload": {
+        "descricao_grupo": "A".repeat(256)
+      },
+      "erroEsperado": "Descrição deve ter no máximo 255 caracteres"
+    },
+    "abreviacao_grupo_muito_longa": {
+      "payload": {
+        "descricao_grupo": "Grupo Válido",
+        "abreviacao_grupo": "A".repeat(51)
+      },
+      "erroEsperado": "Abreviação deve ter no máximo 50 caracteres"
+    }
+  }
+}

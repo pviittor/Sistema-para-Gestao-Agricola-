@@ -1,0 +1,368 @@
+{
+  "table": {
+    "name": "C001_PESSOA",
+    "singularName": "Pessoa",
+    "pluralName": "Pessoas",
+    "description": "Pessoas físicas e jurídicas do sistema, podendo ter múltiplos papéis: cliente, produtor, portador, funcionário, fornecedor, motorista, operador",
+    "multiTenant": true,
+    "auditable": true,
+    "cacheable": true
+  },
+  "fields": [
+    {
+      "name": "id_pessoa",
+      "type": "INTEGER",
+      "required": true,
+      "unique": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID único da pessoa (auto-increment)"
+    },
+    {
+      "name": "nomerazao_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Nome (pessoa física) ou razão social (pessoa jurídica)"
+    },
+    {
+      "name": "nomefantasia_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Nome fantasia (principalmente para pessoa jurídica)"
+    },
+    {
+      "name": "cpfcnpj_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "unique": true,
+      "comment": "CPF (pessoa física) ou CNPJ (pessoa jurídica)",
+      "validation": {
+        "custom": "IsUnique:Pessoa,cpfcnpj_pessoa"
+      }
+    },
+    {
+      "name": "nascimento_pessoa",
+      "type": "DATE",
+      "required": false,
+      "comment": "Data de nascimento (pessoa física) ou fundação (pessoa jurídica)",
+      "validation": {
+        "custom": "IsDateString"
+      }
+    },
+    {
+      "name": "contato_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Nome do contato da pessoa"
+    },
+    {
+      "name": "email_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Email de contato da pessoa",
+      "validation": {
+        "custom": "IsEmail"
+      }
+    },
+    {
+      "name": "identidade_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Número da identidade (RG)"
+    },
+    {
+      "name": "orgaoidentidade_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Órgão emissor da identidade"
+    },
+    {
+      "name": "caixapostal_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Caixa postal"
+    },
+    {
+      "name": "cep_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "CEP do endereço (formato: 00000-000)",
+      "validation": {
+        "pattern": "^[0-9]{5}-[0-9]{3}$"
+      }
+    },
+    {
+      "name": "complemento_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Complemento do endereço"
+    },
+    {
+      "name": "certidaonegativa_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Certidão negativa"
+    },
+    {
+      "name": "codigoautorizacao_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Código de autorização"
+    },
+    {
+      "name": "cliente_pessoa",
+      "type": "BOOLEAN",
+      "required": true,
+      "defaultValue": false,
+      "comment": "Indica se a pessoa é cliente"
+    },
+    {
+      "name": "produtor_pessoa",
+      "type": "BOOLEAN",
+      "required": true,
+      "defaultValue": false,
+      "comment": "Indica se a pessoa é produtor"
+    },
+    {
+      "name": "portador_pessoa",
+      "type": "BOOLEAN",
+      "required": true,
+      "defaultValue": false,
+      "comment": "Indica se a pessoa é portador"
+    },
+    {
+      "name": "funcionario_pessoa",
+      "type": "BOOLEAN",
+      "required": true,
+      "defaultValue": false,
+      "comment": "Indica se a pessoa é funcionário"
+    },
+    {
+      "name": "fornecedor_pessoa",
+      "type": "BOOLEAN",
+      "required": true,
+      "defaultValue": false,
+      "comment": "Indica se a pessoa é fornecedor"
+    },
+    {
+      "name": "motorista_pessoa",
+      "type": "BOOLEAN",
+      "required": true,
+      "defaultValue": false,
+      "comment": "Indica se a pessoa é motorista"
+    },
+    {
+      "name": "operador_pessoa",
+      "type": "BOOLEAN",
+      "required": true,
+      "defaultValue": false,
+      "comment": "Indica se a pessoa é operador"
+    },
+    {
+      "name": "usercreation",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID do usuário que criou o registro",
+      "validation": {
+        "custom": "IsExists:Usuario,id"
+      }
+    },
+    {
+      "name": "datecreation",
+      "type": "DATE",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "defaultValue": "NOW",
+      "comment": "Data de criação do registro"
+    },
+    {
+      "name": "idMunicipio",
+      "type": "INTEGER",
+      "required": false,
+      "comment": "ID do município (relacionamento será adicionado quando modelo Municipio existir)"
+    },
+    {
+      "name": "tipo_pessoa",
+      "type": "INTEGER",
+      "required": true,
+      "comment": "Tipo de pessoa: 1 = Pessoa Física (PF), 2 = Pessoa Jurídica (PJ)"
+    },
+    {
+      "name": "endereco_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Endereço completo da pessoa"
+    },
+    {
+      "name": "bairro_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Bairro do endereço"
+    },
+    {
+      "name": "numero_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Número do endereço"
+    },
+    {
+      "name": "telefone1_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Telefone principal de contato"
+    },
+    {
+      "name": "inscricaoEstadual_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Inscrição estadual (pessoa jurídica)"
+    },
+    {
+      "name": "observacao_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Observações gerais sobre a pessoa"
+    },
+    {
+      "name": "inscricaoMunicipal_pessoa",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Inscrição municipal (pessoa jurídica)"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "belongsTo",
+      "target": "Usuario",
+      "foreignKey": "usercreation",
+      "as": "usuarioCriador",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Pessoa foi criada por um usuário"
+    }
+  ],
+  "permissions": {
+    "create": "pessoa.create",
+    "read": "pessoa.read",
+    "update": "pessoa.update",
+    "delete": "pessoa.delete"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 3600,
+    "keys": [
+      "pessoa:list:*",
+      "pessoa:findByCpfCnpj:*",
+      "pessoa:findByEmail:*",
+      "pessoa:findByTipo:*",
+      "pessoa:findByUserCreation:*"
+    ]
+  },
+  "businessRules": [
+    {
+      "type": "validation",
+      "description": "Validar formato e dígitos verificadores de CPF/CNPJ baseado em tipo_pessoa",
+      "implementation": "Se tipo_pessoa=1 (PF), validar CPF (11 dígitos) com dígitos verificadores. Se tipo_pessoa=2 (PJ), validar CNPJ (14 dígitos) com dígitos verificadores. Criar validador customizado IsCpfCnpj que recebe tipo_pessoa como parâmetro."
+    },
+    {
+      "type": "validation",
+      "description": "Validar se campos específicos estão preenchidos baseado em tipo_pessoa",
+      "implementation": "Se tipo_pessoa=1 (PF): validar CPF, identidade_pessoa. Se tipo_pessoa=2 (PJ): validar CNPJ, inscricaoEstadual_pessoa (se aplicável), nomefantasia_pessoa. Criar validador customizado IsValidPessoaFields que verifica campos obrigatórios por tipo."
+    },
+    {
+      "type": "validation",
+      "description": "CPF/CNPJ deve ser único no sistema",
+      "implementation": "Validador IsUnique já aplicado no campo cpfcnpj_pessoa. Garantir que validação ocorra antes de salvar no Application Service."
+    },
+    {
+      "type": "custom",
+      "description": "Preencher usercreation automaticamente com userId do contexto",
+      "implementation": "No método create() do Application Service, preencher usercreation com userId obtido do RequestContext. Não permitir que seja enviado no DTO."
+    },
+    {
+      "type": "custom",
+      "description": "Preencher datecreation automaticamente com data/hora atual",
+      "implementation": "No método create() do Application Service, preencher datecreation com DataTypes.NOW. Não permitir que seja enviado no DTO."
+    }
+  ],
+  "customMethods": [
+    {
+      "name": "findByCpfCnpj",
+      "type": "repository",
+      "description": "Busca pessoa por CPF ou CNPJ",
+      "parameters": [
+        {
+          "name": "cpfcnpj",
+          "type": "string",
+          "required": true,
+          "description": "CPF ou CNPJ da pessoa (com ou sem formatação)"
+        }
+      ],
+      "returnType": "Pessoa | null",
+      "cacheKey": "pessoa:findByCpfCnpj:{cpfcnpj}"
+    },
+    {
+      "name": "findByEmail",
+      "type": "repository",
+      "description": "Busca pessoa por email",
+      "parameters": [
+        {
+          "name": "email",
+          "type": "string",
+          "required": true,
+          "description": "Email da pessoa"
+        }
+      ],
+      "returnType": "Pessoa | null",
+      "cacheKey": "pessoa:findByEmail:{email}"
+    },
+    {
+      "name": "findByTipo",
+      "type": "repository",
+      "description": "Busca pessoas por tipo (Pessoa Física ou Pessoa Jurídica)",
+      "parameters": [
+        {
+          "name": "tipo",
+          "type": "number",
+          "required": true,
+          "description": "Tipo de pessoa: 1 = Pessoa Física (PF), 2 = Pessoa Jurídica (PJ)"
+        }
+      ],
+      "returnType": "Pessoa[]",
+      "cacheKey": "pessoa:findByTipo:{tipo}"
+    },
+    {
+      "name": "findByUserCreation",
+      "type": "repository",
+      "description": "Busca pessoas criadas por um usuário específico",
+      "parameters": [
+        {
+          "name": "userId",
+          "type": "number",
+          "required": true,
+          "description": "ID do usuário que criou as pessoas"
+        }
+      ],
+      "returnType": "Pessoa[]",
+      "cacheKey": "pessoa:findByUserCreation:{userId}"
+    },
+    {
+      "name": "findByPapel",
+      "type": "repository",
+      "description": "Busca pessoas por papel específico (cliente, produtor, portador, funcionário, fornecedor, motorista, operador)",
+      "parameters": [
+        {
+          "name": "papel",
+          "type": "string",
+          "required": true,
+          "description": "Papel da pessoa: 'cliente', 'produtor', 'portador', 'funcionario', 'fornecedor', 'motorista', 'operador'"
+        }
+      ],
+      "returnType": "Pessoa[]",
+      "cacheKey": "pessoa:findByPapel:{papel}"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "table": {
+    "name": "C005_unidadeMedida",
+    "singularName": "UnidadeMedida",
+    "pluralName": "UnidadesMedida",
+    "description": "Unidades de medida para produtos e insumos",
+    "multiTenant": true,
+    "auditable": true,
+    "cacheable": true
+  },
+  "fields": [
+    {
+      "name": "id_unidade",
+      "type": "INTEGER",
+      "required": true,
+      "unique": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID único da unidade de medida (auto-increment)"
+    },
+    {
+      "name": "tenantId",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "excludeFromResponse": false,
+      "comment": "ID do tenant ao qual a unidade de medida pertence"
+    },
+    {
+      "name": "descricao_unidade",
+      "type": "STRING",
+      "required": true,
+      "comment": "Descrição da unidade de medida",
+      "validation": {
+        "min": 3,
+        "max": 255
+      }
+    },
+    {
+      "name": "abreviatura_unidade",
+      "type": "STRING",
+      "required": false,
+      "comment": "Abreviatura da unidade de medida",
+      "validation": {
+        "min": 1,
+        "max": 20
+      }
+    },
+    {
+      "name": "usercreation",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID do usuário que criou o registro"
+    },
+    {
+      "name": "datecreation",
+      "type": "DATE",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "Data de criação do registro"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "belongsTo",
+      "target": "Usuario",
+      "foreignKey": "usercreation",
+      "as": "usuarioCriador",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Unidade de medida foi criada por um usuário"
+    }
+  ],
+  "permissions": {
+    "create": "unidadeMedida.create",
+    "read": "unidadeMedida.read",
+    "update": "unidadeMedida.update",
+    "delete": "unidadeMedida.delete"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 3600,
+    "keys": [
+      "unidadeMedida:list:*",
+      "unidadeMedida:findById:*"
+    ]
+  },
+  "businessRules": [],
+  "customMethods": []
+}

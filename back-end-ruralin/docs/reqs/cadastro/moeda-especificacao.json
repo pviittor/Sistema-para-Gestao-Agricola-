@@ -1,0 +1,114 @@
+{
+  "table": {
+    "name": "C006_moeda",
+    "singularName": "Moeda",
+    "pluralName": "Moedas",
+    "description": "Moedas utilizadas no sistema",
+    "multiTenant": true,
+    "auditable": true,
+    "cacheable": true
+  },
+  "fields": [
+    {
+      "name": "id_moeda",
+      "type": "INTEGER",
+      "required": true,
+      "unique": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID único da moeda (auto-increment)"
+    },
+    {
+      "name": "tenantId",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "excludeFromResponse": false,
+      "comment": "ID do tenant ao qual a moeda pertence"
+    },
+    {
+      "name": "descricao_moeda",
+      "type": "STRING",
+      "required": true,
+      "comment": "Descrição da moeda",
+      "validation": {
+        "min": 3,
+        "max": 255
+      }
+    },
+    {
+      "name": "simbolo_moeda",
+      "type": "STRING",
+      "required": false,
+      "comment": "Símbolo da moeda (ex: R$, $, €)",
+      "validation": {
+        "min": 1,
+        "max": 10
+      }
+    },
+    {
+      "name": "codigoIntegracaoBancoCentral",
+      "type": "STRING",
+      "required": false,
+      "comment": "Código de integração com Banco Central",
+      "validation": {
+        "min": 1,
+        "max": 50
+      }
+    },
+    {
+      "name": "siglabc_moeda",
+      "type": "STRING",
+      "required": false,
+      "comment": "Sigla da moeda no Banco Central",
+      "validation": {
+        "min": 1,
+        "max": 10
+      }
+    },
+    {
+      "name": "usercreation",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID do usuário que criou o registro"
+    },
+    {
+      "name": "datecreation",
+      "type": "DATE",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "Data de criação do registro"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "belongsTo",
+      "target": "Usuario",
+      "foreignKey": "usercreation",
+      "as": "usuarioCriador",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Moeda foi criada por um usuário"
+    }
+  ],
+  "permissions": {
+    "create": "moeda.create",
+    "read": "moeda.read",
+    "update": "moeda.update",
+    "delete": "moeda.delete"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 3600,
+    "keys": [
+      "moeda:list:*",
+      "moeda:findById:*"
+    ]
+  },
+  "businessRules": [],
+  "customMethods": []
+}

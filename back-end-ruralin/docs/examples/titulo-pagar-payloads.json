@@ -1,0 +1,698 @@
+{
+  "description": "Payloads de exemplo para testar a API de Título a Pagar",
+  "endpoints": {
+    "POST /api/titulosPagar/completo": {
+      "description": "Criar um título a pagar completo com parcelas e rateios em uma única requisição",
+      "headers": {
+        "Authorization": "Bearer {token}",
+        "Content-Type": "application/json"
+      },
+      "examples": [
+        {
+          "name": "Título completo com parcelas e rateios",
+          "description": "Exemplo completo incluindo título, 3 parcelas, rateios por plano de contas e centro de custo",
+          "payload": {
+            "idFornecedor": 1,
+            "idPortador": 2,
+            "idProdutor": 3,
+            "idFazenda": 1,
+            "idSafra": 1,
+            "idMoeda": 1,
+            "dataLancamento": "2024-01-15",
+            "numeroTitulo": "TP-2024-001",
+            "valorTitulo": 30000.00,
+            "observacao": "Título referente à compra de insumos agrícolas para a safra 2024",
+            "impostoRenda": false,
+            "status": "ABERTO",
+            "parcelas": [
+              {
+                "numeroParcela": 1,
+                "dataVencimento": "2024-02-15",
+                "valorParcela": 10000.00,
+                "observacao": "Primeira parcela"
+              },
+              {
+                "numeroParcela": 2,
+                "dataVencimento": "2024-03-15",
+                "valorParcela": 10000.00,
+                "observacao": "Segunda parcela"
+              },
+              {
+                "numeroParcela": 3,
+                "dataVencimento": "2024-04-15",
+                "valorParcela": 10000.00,
+                "observacao": "Terceira parcela"
+              }
+            ],
+            "rateiosPlanoConta": [
+              {
+                "idPlanoContaGerencial": 10,
+                "valorRateio": 18000.00,
+                "percentualRateio": 60.00,
+                "observacao": "60% em insumos agrícolas"
+              },
+              {
+                "idPlanoContaGerencial": 11,
+                "valorRateio": 12000.00,
+                "percentualRateio": 40.00,
+                "observacao": "40% em serviços agrícolas"
+              }
+            ],
+            "rateiosCentroCusto": [
+              {
+                "idCentroCusto": 5,
+                "valorRateio": 15000.00,
+                "percentualRateio": 50.00,
+                "observacao": "50% no centro de custo Fazenda Norte"
+              },
+              {
+                "idCentroCusto": 6,
+                "valorRateio": 15000.00,
+                "percentualRateio": 50.00,
+                "observacao": "50% no centro de custo Fazenda Sul"
+              }
+            ]
+          },
+          "note": "Este endpoint cria o título, todas as parcelas e rateios em uma única transação. O idTituloPagar é preenchido automaticamente nas parcelas e rateios."
+        },
+        {
+          "name": "Título completo apenas com parcelas (sem rateios)",
+          "description": "Exemplo de título com parcelas mas sem rateios",
+          "payload": {
+            "idFornecedor": 1,
+            "idPortador": 2,
+            "idProdutor": 3,
+            "idFazenda": 1,
+            "idSafra": 1,
+            "idMoeda": 1,
+            "dataLancamento": "2024-01-15",
+            "numeroTitulo": "TP-2024-002",
+            "valorTitulo": 15000.00,
+            "parcelas": [
+              {
+                "numeroParcela": 1,
+                "dataVencimento": "2024-02-15",
+                "valorParcela": 15000.00
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "POST /api/titulosPagar": {
+      "description": "Criar um novo título a pagar",
+      "headers": {
+        "Authorization": "Bearer {token}",
+        "Content-Type": "application/json"
+      },
+      "examples": [
+        {
+          "name": "Título completo com parcelas e rateios",
+          "description": "Exemplo completo incluindo todas as informações: título, 3 parcelas, rateios por plano de contas e centro de custo",
+          "payload": {
+            "idFornecedor": 1,
+            "idPortador": 2,
+            "idProdutor": 3,
+            "idFazenda": 1,
+            "idSafra": 1,
+            "idMoeda": 1,
+            "dataLancamento": "2024-01-15",
+            "numeroTitulo": "TP-2024-001",
+            "valorTitulo": 30000.00,
+            "quantidadeParcelas": 3,
+            "observacao": "Título referente à compra de insumos agrícolas para a safra 2024",
+            "impostoRenda": false,
+            "status": "ABERTO"
+          },
+          "note": "Após criar o título, você precisará criar as parcelas e rateios em requisições separadas. Veja os exemplos abaixo."
+        },
+        {
+          "name": "Título mínimo (sem opcionais)",
+          "description": "Exemplo com apenas os campos obrigatórios",
+          "payload": {
+            "idFornecedor": 1,
+            "idPortador": 2,
+            "idProdutor": 3,
+            "idFazenda": 1,
+            "idSafra": 1,
+            "idMoeda": 1,
+            "dataLancamento": "2024-01-15",
+            "numeroTitulo": "TP-2024-002",
+            "valorTitulo": 15000.00
+          }
+        },
+        {
+          "name": "Título com imposto de renda",
+          "description": "Exemplo de título sujeito a imposto de renda",
+          "payload": {
+            "idFornecedor": 1,
+            "idPortador": 2,
+            "idProdutor": 3,
+            "idFazenda": 1,
+            "idSafra": 1,
+            "idMoeda": 1,
+            "dataLancamento": "2024-01-15",
+            "numeroTitulo": "TP-2024-003",
+            "valorTitulo": 50000.00,
+            "impostoRenda": true,
+            "observacao": "Título sujeito a retenção de IR"
+          }
+        }
+      ]
+    },
+    "POST /api/parcelasTituloPagar": {
+      "description": "Criar parcelas para um título a pagar",
+      "headers": {
+        "Authorization": "Bearer {token}",
+        "Content-Type": "application/json"
+      },
+      "examples": [
+        {
+          "name": "Criar 3 parcelas mensais",
+          "description": "Exemplo de criação de 3 parcelas com vencimentos mensais",
+          "payloads": [
+            {
+              "idTituloPagar": 1,
+              "numeroParcela": 1,
+              "dataVencimento": "2024-02-15",
+              "valorParcela": 10000.00
+            },
+            {
+              "idTituloPagar": 1,
+              "numeroParcela": 2,
+              "dataVencimento": "2024-03-15",
+              "valorParcela": 10000.00
+            },
+            {
+              "idTituloPagar": 1,
+              "numeroParcela": 3,
+              "dataVencimento": "2024-04-15",
+              "valorParcela": 10000.00
+            }
+          ],
+          "note": "Cada parcela deve ser criada em uma requisição separada. O valor total das parcelas deve ser igual ao valorTitulo."
+        },
+        {
+          "name": "Criar parcelas com valores diferentes",
+          "description": "Exemplo de parcelas com valores distintos",
+          "payloads": [
+            {
+              "idTituloPagar": 1,
+              "numeroParcela": 1,
+              "dataVencimento": "2024-02-15",
+              "valorParcela": 15000.00
+            },
+            {
+              "idTituloPagar": 1,
+              "numeroParcela": 2,
+              "dataVencimento": "2024-03-15",
+              "valorParcela": 10000.00
+            },
+            {
+              "idTituloPagar": 1,
+              "numeroParcela": 3,
+              "dataVencimento": "2024-04-15",
+              "valorParcela": 5000.00
+            }
+          ]
+        },
+        {
+          "name": "Criar parcela única",
+          "description": "Exemplo de título com apenas uma parcela",
+          "payload": {
+            "idTituloPagar": 1,
+            "numeroParcela": 1,
+            "dataVencimento": "2024-02-15",
+            "valorParcela": 30000.00
+          }
+        }
+      ]
+    },
+    "POST /api/rateiosPlanoContaTituloPagar": {
+      "description": "Criar rateios por plano de contas para um título a pagar",
+      "headers": {
+        "Authorization": "Bearer {token}",
+        "Content-Type": "application/json"
+      },
+      "examples": [
+        {
+          "name": "Rateio único (100%)",
+          "description": "Rateio completo do título em um único plano de contas",
+          "payload": {
+            "idTituloPagar": 1,
+            "idPlanoContaGerencial": 10,
+            "valorRateio": 30000.00,
+            "percentualRateio": 100.00,
+            "observacao": "Rateio completo em insumos agrícolas"
+          }
+        },
+        {
+          "name": "Múltiplos rateios",
+          "description": "Exemplo de rateio distribuído em múltiplos planos de contas",
+          "payloads": [
+            {
+              "idTituloPagar": 1,
+              "idPlanoContaGerencial": 10,
+              "valorRateio": 18000.00,
+              "percentualRateio": 60.00,
+              "observacao": "60% em insumos agrícolas"
+            },
+            {
+              "idTituloPagar": 1,
+              "idPlanoContaGerencial": 11,
+              "valorRateio": 12000.00,
+              "percentualRateio": 40.00,
+              "observacao": "40% em serviços agrícolas"
+            }
+          ],
+          "note": "Cada rateio deve ser criado em uma requisição separada. A soma dos percentuais deve ser 100% e a soma dos valores deve ser igual ao valorTitulo."
+        },
+        {
+          "name": "Rateio sem observação",
+          "description": "Rateio sem campo de observação",
+          "payload": {
+            "idTituloPagar": 1,
+            "idPlanoContaGerencial": 10,
+            "valorRateio": 30000.00,
+            "percentualRateio": 100.00
+          }
+        }
+      ]
+    },
+    "POST /api/rateiosCentroCustoTituloPagar": {
+      "description": "Criar rateios por centro de custo para um título a pagar",
+      "headers": {
+        "Authorization": "Bearer {token}",
+        "Content-Type": "application/json"
+      },
+      "examples": [
+        {
+          "name": "Rateio único (100%)",
+          "description": "Rateio completo do título em um único centro de custo",
+          "payload": {
+            "idTituloPagar": 1,
+            "idCentroCusto": 5,
+            "valorRateio": 30000.00,
+            "percentualRateio": 100.00,
+            "observacao": "Rateio completo no centro de custo Fazenda Norte"
+          }
+        },
+        {
+          "name": "Múltiplos rateios",
+          "description": "Exemplo de rateio distribuído em múltiplos centros de custo",
+          "payloads": [
+            {
+              "idTituloPagar": 1,
+              "idCentroCusto": 5,
+              "valorRateio": 15000.00,
+              "percentualRateio": 50.00,
+              "observacao": "50% no centro de custo Fazenda Norte"
+            },
+            {
+              "idTituloPagar": 1,
+              "idCentroCusto": 6,
+              "valorRateio": 15000.00,
+              "percentualRateio": 50.00,
+              "observacao": "50% no centro de custo Fazenda Sul"
+            }
+          ],
+          "note": "Cada rateio deve ser criado em uma requisição separada. A soma dos percentuais deve ser 100% e a soma dos valores deve ser igual ao valorTitulo."
+        }
+      ]
+    }
+  },
+  "fluxoCompleto": {
+    "description": "Exemplo de fluxo completo para criar um título a pagar com parcelas e rateios",
+    "steps": [
+      {
+        "step": 1,
+        "description": "Criar o título a pagar",
+        "method": "POST",
+        "endpoint": "/api/titulosPagar",
+        "payload": {
+          "idFornecedor": 1,
+          "idPortador": 2,
+          "idProdutor": 3,
+          "idFazenda": 1,
+          "idSafra": 1,
+          "idMoeda": 1,
+          "dataLancamento": "2024-01-15",
+          "numeroTitulo": "TP-2024-001",
+          "valorTitulo": 30000.00,
+          "quantidadeParcelas": 3,
+          "observacao": "Título referente à compra de insumos agrícolas",
+          "impostoRenda": false,
+          "status": "ABERTO"
+        },
+        "response": {
+          "id": 1,
+          "tenantId": 1,
+          "idFornecedor": 1,
+          "idPortador": 2,
+          "idProdutor": 3,
+          "idFazenda": 1,
+          "idSafra": 1,
+          "idMoeda": 1,
+          "dataLancamento": "2024-01-15",
+          "numeroTitulo": "TP-2024-001",
+          "valorTitulo": 30000.00,
+          "valorTituloMoedaOriginal": 30000.00,
+          "valorTituloMoedaPadrao": 30000.00,
+          "quantidadeParcelas": 3,
+          "observacao": "Título referente à compra de insumos agrícolas",
+          "impostoRenda": false,
+          "status": "ABERTO",
+          "usercreation": 1,
+          "datecreation": "2024-01-15T10:00:00.000Z"
+        },
+        "note": "Guarde o ID retornado (ex: 1) para usar nas próximas etapas"
+      },
+      {
+        "step": 2,
+        "description": "Criar as parcelas do título",
+        "method": "POST",
+        "endpoint": "/api/parcelasTituloPagar",
+        "payloads": [
+          {
+            "idTituloPagar": 1,
+            "numeroParcela": 1,
+            "dataVencimento": "2024-02-15",
+            "valorParcela": 10000.00
+          },
+          {
+            "idTituloPagar": 1,
+            "numeroParcela": 2,
+            "dataVencimento": "2024-03-15",
+            "valorParcela": 10000.00
+          },
+          {
+            "idTituloPagar": 1,
+            "numeroParcela": 3,
+            "dataVencimento": "2024-04-15",
+            "valorParcela": 10000.00
+          }
+        ],
+        "note": "Crie cada parcela em uma requisição separada. A soma dos valores das parcelas deve ser igual ao valorTitulo (30000.00)"
+      },
+      {
+        "step": 3,
+        "description": "Criar rateios por plano de contas (opcional)",
+        "method": "POST",
+        "endpoint": "/api/rateiosPlanoContaTituloPagar",
+        "payloads": [
+          {
+            "idTituloPagar": 1,
+            "idPlanoContaGerencial": 10,
+            "valorRateio": 18000.00,
+            "percentualRateio": 60.00,
+            "observacao": "60% em insumos agrícolas"
+          },
+          {
+            "idTituloPagar": 1,
+            "idPlanoContaGerencial": 11,
+            "valorRateio": 12000.00,
+            "percentualRateio": 40.00,
+            "observacao": "40% em serviços agrícolas"
+          }
+        ],
+        "note": "Crie cada rateio em uma requisição separada. A soma dos percentuais deve ser 100% e a soma dos valores deve ser igual ao valorTitulo"
+      },
+      {
+        "step": 4,
+        "description": "Criar rateios por centro de custo (opcional)",
+        "method": "POST",
+        "endpoint": "/api/rateiosCentroCustoTituloPagar",
+        "payloads": [
+          {
+            "idTituloPagar": 1,
+            "idCentroCusto": 5,
+            "valorRateio": 15000.00,
+            "percentualRateio": 50.00,
+            "observacao": "50% no centro de custo Fazenda Norte"
+          },
+          {
+            "idTituloPagar": 1,
+            "idCentroCusto": 6,
+            "valorRateio": 15000.00,
+            "percentualRateio": 50.00,
+            "observacao": "50% no centro de custo Fazenda Sul"
+          }
+        ],
+        "note": "Crie cada rateio em uma requisição separada. A soma dos percentuais deve ser 100% e a soma dos valores deve ser igual ao valorTitulo"
+      }
+    ]
+  },
+  "validações": {
+    "tituloPagar": {
+      "idFornecedor": {
+        "required": true,
+        "type": "integer",
+        "min": 1,
+        "description": "ID da pessoa marcada como fornecedor"
+      },
+      "idPortador": {
+        "required": true,
+        "type": "integer",
+        "min": 1,
+        "description": "ID da pessoa marcada como portador"
+      },
+      "idProdutor": {
+        "required": true,
+        "type": "integer",
+        "min": 1,
+        "description": "ID da pessoa marcada como produtor"
+      },
+      "idFazenda": {
+        "required": true,
+        "type": "integer",
+        "min": 1,
+        "description": "ID da fazenda"
+      },
+      "idSafra": {
+        "required": true,
+        "type": "integer",
+        "min": 1,
+        "description": "ID da safra"
+      },
+      "idMoeda": {
+        "required": true,
+        "type": "integer",
+        "min": 1,
+        "description": "ID da moeda"
+      },
+      "dataLancamento": {
+        "required": true,
+        "type": "string",
+        "format": "date",
+        "pattern": "YYYY-MM-DD",
+        "description": "Data de lançamento do título"
+      },
+      "numeroTitulo": {
+        "required": true,
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100,
+        "unique": true,
+        "description": "Número único do título por tenant"
+      },
+      "valorTitulo": {
+        "required": true,
+        "type": "number",
+        "min": 0.01,
+        "description": "Valor total do título (soma de todas as parcelas)"
+      },
+      "quantidadeParcelas": {
+        "required": false,
+        "type": "integer",
+        "min": 1,
+        "description": "Quantidade de parcelas (calculado automaticamente)"
+      },
+      "observacao": {
+        "required": false,
+        "type": "string",
+        "description": "Observações sobre o título"
+      },
+      "impostoRenda": {
+        "required": false,
+        "type": "boolean",
+        "default": false,
+        "description": "Se o título está sujeito a imposto de renda"
+      },
+      "status": {
+        "required": false,
+        "type": "string",
+        "enum": ["ABERTO", "PARCIAL", "BAIXADO", "CANCELADO"],
+        "default": "ABERTO",
+        "description": "Status do título"
+      }
+    },
+    "parcela": {
+      "idTituloPagar": {
+        "required": true,
+        "type": "integer",
+        "min": 1,
+        "description": "ID do título a pagar ao qual a parcela pertence"
+      },
+      "numeroParcela": {
+        "required": true,
+        "type": "integer",
+        "min": 1,
+        "description": "Número sequencial da parcela (1, 2, 3...)"
+      },
+      "dataVencimento": {
+        "required": true,
+        "type": "string",
+        "format": "date",
+        "pattern": "YYYY-MM-DD",
+        "description": "Data de vencimento da parcela"
+      },
+      "valorParcela": {
+        "required": true,
+        "type": "number",
+        "min": 0.01,
+        "description": "Valor da parcela"
+      },
+      "note": "A soma dos valores das parcelas deve ser igual ao valorTitulo"
+    },
+    "rateioPlanoConta": {
+      "idTituloPagar": {
+        "required": true,
+        "type": "integer",
+        "min": 1,
+        "description": "ID do título a pagar ao qual o rateio pertence"
+      },
+      "idPlanoContaGerencial": {
+        "required": true,
+        "type": "integer",
+        "min": 1,
+        "description": "ID do plano de contas gerencial"
+      },
+      "valorRateio": {
+        "required": true,
+        "type": "number",
+        "min": 0.01,
+        "description": "Valor do rateio"
+      },
+      "percentualRateio": {
+        "required": false,
+        "type": "number",
+        "min": 0,
+        "max": 100,
+        "description": "Percentual do rateio (calculado automaticamente)"
+      },
+      "observacao": {
+        "required": false,
+        "type": "string",
+        "description": "Observações sobre o rateio"
+      },
+      "note": "A soma dos percentuais deve ser 100% e a soma dos valores deve ser igual ao valorTitulo"
+    },
+    "rateioCentroCusto": {
+      "idTituloPagar": {
+        "required": true,
+        "type": "integer",
+        "min": 1,
+        "description": "ID do título a pagar ao qual o rateio pertence"
+      },
+      "idCentroCusto": {
+        "required": true,
+        "type": "integer",
+        "min": 1,
+        "description": "ID do centro de custo"
+      },
+      "valorRateio": {
+        "required": true,
+        "type": "number",
+        "min": 0.01,
+        "description": "Valor do rateio"
+      },
+      "percentualRateio": {
+        "required": false,
+        "type": "number",
+        "min": 0,
+        "max": 100,
+        "description": "Percentual do rateio (calculado automaticamente)"
+      },
+      "observacao": {
+        "required": false,
+        "type": "string",
+        "description": "Observações sobre o rateio"
+      },
+      "note": "A soma dos percentuais deve ser 100% e a soma dos valores deve ser igual ao valorTitulo"
+    }
+  },
+  "exemplosErro": {
+    "numeroTitulo_duplicado": {
+      "payload": {
+        "idFornecedor": 1,
+        "idPortador": 2,
+        "idProdutor": 3,
+        "idFazenda": 1,
+        "idSafra": 1,
+        "idMoeda": 1,
+        "dataLancamento": "2024-01-15",
+        "numeroTitulo": "TP-2024-001",
+        "valorTitulo": 10000.00
+      },
+      "erroEsperado": "Já existe um título com este número para este tenant"
+    },
+    "valorTitulo_invalido": {
+      "payload": {
+        "idFornecedor": 1,
+        "idPortador": 2,
+        "idProdutor": 3,
+        "idFazenda": 1,
+        "idSafra": 1,
+        "idMoeda": 1,
+        "dataLancamento": "2024-01-15",
+        "numeroTitulo": "TP-2024-002",
+        "valorTitulo": 0
+      },
+      "erroEsperado": "Valor do título deve ser maior que zero"
+    },
+    "dataLancamento_invalida": {
+      "payload": {
+        "idFornecedor": 1,
+        "idPortador": 2,
+        "idProdutor": 3,
+        "idFazenda": 1,
+        "idSafra": 1,
+        "idMoeda": 1,
+        "dataLancamento": "data-invalida",
+        "numeroTitulo": "TP-2024-003",
+        "valorTitulo": 10000.00
+      },
+      "erroEsperado": "Data de lançamento deve ser uma data válida no formato YYYY-MM-DD"
+    },
+    "parcelas_soma_diferente": {
+      "note": "Se a soma dos valores das parcelas for diferente do valorTitulo, haverá inconsistência nos dados",
+      "titulo": {
+        "valorTitulo": 30000.00
+      },
+      "parcelas": [
+        {
+          "valorParcela": 10000.00
+        },
+        {
+          "valorParcela": 10000.00
+        },
+        {
+          "valorParcela": 5000.00
+        }
+      ],
+      "erroEsperado": "Soma das parcelas (25000.00) diferente do valorTitulo (30000.00)"
+    },
+    "rateios_percentual_invalido": {
+      "note": "Se a soma dos percentuais dos rateios for diferente de 100%, haverá inconsistência",
+      "rateios": [
+        {
+          "percentualRateio": 60.00
+        },
+        {
+          "percentualRateio": 50.00
+        }
+      ],
+      "erroEsperado": "Soma dos percentuais (110%) diferente de 100%"
+    }
+  }
+}

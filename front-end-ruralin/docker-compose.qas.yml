@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.qas
+    container_name: frontend-ruralin-qas
+    ports:
+      - '4000:80'
+    restart: always

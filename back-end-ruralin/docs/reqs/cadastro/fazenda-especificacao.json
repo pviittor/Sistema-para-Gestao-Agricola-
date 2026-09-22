@@ -1,0 +1,362 @@
+{
+  "table": {
+    "name": "C018_fazenda",
+    "singularName": "Fazenda",
+    "pluralName": "Fazendas",
+    "description": "Fazendas agrícolas vinculadas a produtores",
+    "multiTenant": true,
+    "auditable": true,
+    "cacheable": true
+  },
+  "fields": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "required": true,
+      "unique": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID único da fazenda (auto-increment)"
+    },
+    {
+      "name": "tenantId",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "excludeFromResponse": false,
+      "comment": "ID do tenant ao qual a fazenda pertence"
+    },
+    {
+      "name": "idPessoa",
+      "type": "INTEGER",
+      "required": true,
+      "comment": "ID da pessoa (produtor) proprietária da fazenda",
+      "validation": {
+        "custom": "IsExists:Pessoa,id_pessoa"
+      }
+    },
+    {
+      "name": "descricao",
+      "type": "STRING",
+      "required": true,
+      "comment": "Descrição/nome da fazenda",
+      "validation": {
+        "min": 3,
+        "max": 255
+      }
+    },
+    {
+      "name": "endereco",
+      "type": "STRING",
+      "required": false,
+      "comment": "Endereço da fazenda",
+      "validation": {
+        "max": 255
+      }
+    },
+    {
+      "name": "complemento",
+      "type": "STRING",
+      "required": false,
+      "comment": "Complemento do endereço",
+      "validation": {
+        "max": 255
+      }
+    },
+    {
+      "name": "idMunicipio",
+      "type": "INTEGER",
+      "required": true,
+      "comment": "ID do município onde a fazenda está localizada",
+      "validation": {
+        "custom": "IsExists:Municipio,id"
+      }
+    },
+    {
+      "name": "inscricaoEstadual",
+      "type": "STRING",
+      "required": false,
+      "comment": "Inscrição estadual da fazenda",
+      "validation": {
+        "max": 50
+      }
+    },
+    {
+      "name": "areaTotal",
+      "type": "DECIMAL",
+      "required": true,
+      "comment": "Área total da fazenda em hectares",
+      "validation": {
+        "min": 0
+      }
+    },
+    {
+      "name": "areaCultivada",
+      "type": "DECIMAL",
+      "required": true,
+      "comment": "Área cultivada em hectares",
+      "validation": {
+        "min": 0
+      }
+    },
+    {
+      "name": "reservaLegal",
+      "type": "DECIMAL",
+      "required": true,
+      "comment": "Reserva legal em hectares",
+      "validation": {
+        "min": 0
+      }
+    },
+    {
+      "name": "telefone",
+      "type": "STRING",
+      "required": false,
+      "comment": "Telefone de contato da fazenda",
+      "validation": {
+        "max": 20
+      }
+    },
+    {
+      "name": "gerente",
+      "type": "STRING",
+      "required": false,
+      "comment": "Nome do gerente da fazenda",
+      "validation": {
+        "max": 255
+      }
+    },
+    {
+      "name": "matricula",
+      "type": "STRING",
+      "required": false,
+      "comment": "Matrícula do imóvel",
+      "validation": {
+        "max": 50
+      }
+    },
+    {
+      "name": "livro",
+      "type": "STRING",
+      "required": false,
+      "comment": "Livro da matrícula",
+      "validation": {
+        "max": 50
+      }
+    },
+    {
+      "name": "folha",
+      "type": "STRING",
+      "required": false,
+      "comment": "Folha da matrícula",
+      "validation": {
+        "max": 50
+      }
+    },
+    {
+      "name": "itr",
+      "type": "STRING",
+      "required": false,
+      "comment": "ITR (Imposto Territorial Rural)",
+      "validation": {
+        "max": 50
+      }
+    },
+    {
+      "name": "cei",
+      "type": "STRING",
+      "required": false,
+      "comment": "CEI (Cadastro Específico do INSS)",
+      "validation": {
+        "max": 50
+      }
+    },
+    {
+      "name": "lcdprTipoExploracao",
+      "type": "INTEGER",
+      "required": false,
+      "comment": "Tipo de exploração LCDPR (1-Exploração individual, 2-Condomínio, 3-Imóvel arrendado, 4-Parceria, 5-Comodato)",
+      "validation": {
+        "min": 1,
+        "max": 5
+      }
+    },
+    {
+      "name": "lcdprParticipacao",
+      "type": "DECIMAL",
+      "required": false,
+      "defaultValue": 0,
+      "comment": "Participação na exploração (percentual)"
+    },
+    {
+      "name": "arrendada",
+      "type": "BOOLEAN",
+      "required": false,
+      "defaultValue": false,
+      "comment": "Se a fazenda é arrendada"
+    },
+    {
+      "name": "idPessoaArrendamento",
+      "type": "INTEGER",
+      "required": false,
+      "comment": "ID da pessoa (arrendador) quando a fazenda é arrendada",
+      "validation": {
+        "custom": "IsExists:Pessoa,id_pessoa"
+      }
+    },
+    {
+      "name": "documento",
+      "type": "STRING",
+      "required": false,
+      "comment": "Documento do arrendamento",
+      "validation": {
+        "max": 255
+      }
+    },
+    {
+      "name": "dataInicio",
+      "type": "DATEONLY",
+      "required": false,
+      "comment": "Data de início do arrendamento",
+      "validation": {
+        "custom": "IsDateString"
+      }
+    },
+    {
+      "name": "dataFim",
+      "type": "DATEONLY",
+      "required": false,
+      "comment": "Data de fim do arrendamento",
+      "validation": {
+        "custom": "IsDateString"
+      }
+    },
+    {
+      "name": "observacoes",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Observações gerais sobre a fazenda"
+    },
+    {
+      "name": "movimentaLCDPR",
+      "type": "BOOLEAN",
+      "required": false,
+      "defaultValue": false,
+      "comment": "Se a fazenda movimenta LCDPR"
+    },
+    {
+      "name": "movimentaGado",
+      "type": "BOOLEAN",
+      "required": false,
+      "defaultValue": false,
+      "comment": "Se a fazenda movimenta gado"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "belongsTo",
+      "target": "Pessoa",
+      "foreignKey": "idPessoa",
+      "as": "pessoa",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Fazenda pertence a uma pessoa (produtor)"
+    },
+    {
+      "type": "belongsTo",
+      "target": "Municipio",
+      "foreignKey": "idMunicipio",
+      "as": "municipio",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Fazenda está localizada em um município"
+    },
+    {
+      "type": "belongsTo",
+      "target": "Pessoa",
+      "foreignKey": "idPessoaArrendamento",
+      "as": "pessoaArrendamento",
+      "required": false,
+      "onDelete": "SET NULL",
+      "comment": "Pessoa arrendadora (quando arrendada)"
+    },
+    {
+      "type": "belongsTo",
+      "target": "Usuario",
+      "foreignKey": "usercreation",
+      "as": "usuarioCriador",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Usuário que criou o registro"
+    }
+  ],
+  "permissions": {
+    "create": "fazenda.create",
+    "read": "fazenda.read",
+    "update": "fazenda.update",
+    "delete": "fazenda.delete"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 3600,
+    "keys": [
+      "fazenda:list:*",
+      "fazenda:findById:*",
+      "fazenda:findByPessoa:*",
+      "fazenda:findByMunicipio:*"
+    ]
+  },
+  "businessRules": [
+    {
+      "type": "validation",
+      "description": "Área cultivada não pode ser maior que área total",
+      "implementation": "Validar no Application Service que areaCultivada <= areaTotal"
+    },
+    {
+      "type": "validation",
+      "description": "Data de fim do arrendamento deve ser posterior à data de início",
+      "implementation": "Validar no Application Service que se dataFim fornecida, ela deve ser posterior a dataInicio"
+    },
+    {
+      "type": "crossTenant",
+      "description": "Validar se Pessoa (produtor) pertence ao mesmo tenant",
+      "implementation": "Verificar no Application Service antes de criar/atualizar que pessoa.tenantId === fazenda.tenantId"
+    },
+    {
+      "type": "crossTenant",
+      "description": "Validar se Pessoa (arrendador) pertence ao mesmo tenant quando fornecida",
+      "implementation": "Verificar no Application Service antes de criar/atualizar que pessoaArrendamento.tenantId === fazenda.tenantId"
+    }
+  ],
+  "customMethods": [
+    {
+      "name": "findByPessoa",
+      "type": "repository",
+      "description": "Busca fazendas por pessoa (produtor)",
+      "parameters": [
+        {
+          "name": "idPessoa",
+          "type": "number",
+          "required": true
+        }
+      ],
+      "returnType": "Fazenda[]",
+      "cacheKey": "fazenda:findByPessoa:{idPessoa}"
+    },
+    {
+      "name": "findByMunicipio",
+      "type": "repository",
+      "description": "Busca fazendas por município",
+      "parameters": [
+        {
+          "name": "idMunicipio",
+          "type": "number",
+          "required": true
+        }
+      ],
+      "returnType": "Fazenda[]",
+      "cacheKey": "fazenda:findByMunicipio:{idMunicipio}"
+    }
+  ]
+}

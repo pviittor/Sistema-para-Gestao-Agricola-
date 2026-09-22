@@ -1,0 +1,108 @@
+{
+  "pessoaFisica": {
+    "description": "Exemplo de payload para criar uma Pessoa Física (PF)",
+    "payload": {
+      "nomerazao_pessoa": "João Silva",
+      "cpfcnpj_pessoa": "12345678901",
+      "tipo_pessoa": 1,
+      "nascimento_pessoa": "1990-05-15",
+      "email_pessoa": "joao.silva@example.com",
+      "identidade_pessoa": "1234567",
+      "orgaoidentidade_pessoa": "SSP",
+      "telefone1_pessoa": "(11) 98765-4321",
+      "endereco_pessoa": "Rua das Flores, 123",
+      "bairro_pessoa": "Centro",
+      "numero_pessoa": "123",
+      "cep_pessoa": "01234-567",
+      "complemento_pessoa": "Apto 45",
+      "cliente_pessoa": true,
+      "produtor_pessoa": false,
+      "portador_pessoa": false,
+      "funcionario_pessoa": false,
+      "fornecedor_pessoa": false,
+      "motorista_pessoa": false,
+      "operador_pessoa": false,
+      "contato_pessoa": "João Silva",
+      "observacao_pessoa": "Cliente preferencial"
+    }
+  },
+  "pessoaJuridica": {
+    "description": "Exemplo de payload para criar uma Pessoa Jurídica (PJ)",
+    "payload": {
+      "nomerazao_pessoa": "Empresa ABC Ltda",
+      "nomefantasia_pessoa": "ABC Comércio",
+      "cpfcnpj_pessoa": "12345678000190",
+      "tipo_pessoa": 2,
+      "nascimento_pessoa": "2010-03-20",
+      "email_pessoa": "contato@abc.com.br",
+      "telefone1_pessoa": "(11) 3456-7890",
+      "endereco_pessoa": "Av. Paulista, 1000",
+      "bairro_pessoa": "Bela Vista",
+      "numero_pessoa": "1000",
+      "cep_pessoa": "01310-100",
+      "complemento_pessoa": "Sala 501",
+      "inscricaoEstadual_pessoa": "123.456.789.012",
+      "inscricaoMunicipal_pessoa": "987654321",
+      "cliente_pessoa": true,
+      "produtor_pessoa": true,
+      "portador_pessoa": false,
+      "funcionario_pessoa": false,
+      "fornecedor_pessoa": true,
+      "motorista_pessoa": false,
+      "operador_pessoa": false,
+      "contato_pessoa": "Maria Santos",
+      "observacao_pessoa": "Fornecedor certificado"
+    }
+  },
+  "pessoaFisicaMinimo": {
+    "description": "Exemplo mínimo de payload para Pessoa Física (apenas campos obrigatórios)",
+    "payload": {
+      "tipo_pessoa": 1,
+      "nomerazao_pessoa": "Maria Oliveira",
+      "cpfcnpj_pessoa": "98765432100"
+    }
+  },
+  "pessoaJuridicaMinimo": {
+    "description": "Exemplo mínimo de payload para Pessoa Jurídica (apenas campos obrigatórios)",
+    "payload": {
+      "tipo_pessoa": 2,
+      "nomerazao_pessoa": "XYZ Indústria S.A.",
+      "nomefantasia_pessoa": "XYZ",
+      "cpfcnpj_pessoa": "98765432000111"
+    }
+  },
+  "pessoaCompleta": {
+    "description": "Exemplo completo de payload para Pessoa Física com todos os campos",
+    "payload": {
+      "nomerazao_pessoa": "Carlos Eduardo Santos",
+      "nomefantasia_pessoa": null,
+      "cpfcnpj_pessoa": "11122233344",
+      "tipo_pessoa": 1,
+      "nascimento_pessoa": "1985-12-25",
+      "contato_pessoa": "Carlos Santos",
+      "email_pessoa": "carlos.santos@example.com",
+      "identidade_pessoa": "9876543",
+      "orgaoidentidade_pessoa": "SSP-SP",
+      "caixapostal_pessoa": "12345",
+      "cep_pessoa": "04567-890",
+      "complemento_pessoa": "Bloco B, Apto 101",
+      "certidaonegativa_pessoa": "CN123456",
+      "codigoautorizacao_pessoa": "AUTH789",
+      "cliente_pessoa": true,
+      "produtor_pessoa": true,
+      "portador_pessoa": false,
+      "funcionario_pessoa": true,
+      "fornecedor_pessoa": false,
+      "motorista_pessoa": true,
+      "operador_pessoa": false,
+      "idMunicipio": 3550308,
+      "endereco_pessoa": "Rua dos Trabalhadores, 500",
+      "bairro_pessoa": "Vila Operária",
+      "numero_pessoa": "500",
+      "telefone1_pessoa": "(11) 3333-4444",
+      "inscricaoEstadual_pessoa": null,
+      "observacao_pessoa": "Funcionário desde 2020. Motorista habilitado categoria D.",
+      "inscricaoMunicipal_pessoa": null
+    }
+  }
+}

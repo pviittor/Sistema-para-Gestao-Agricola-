@@ -1,0 +1,53 @@
+export interface ItemNotaFiscal {
+  id_item_nf?: number
+  tenantId?: number
+  notaFiscalId: number
+  produtoId: number
+  numero_item: number
+  codigo_produto: string
+  descricao: string
+  ncm: string
+  cest?: string
+  cfop: string
+  unidade: string
+  quantidade: number
+  vl_unitario: number
+  vl_desconto?: number
+  vl_frete?: number
+  vl_seguro?: number
+  vl_outros?: number
+  vl_bruto?: number
+  vl_total?: number
+  // ICMS
+  cst_icms: string
+  modalidade_bc_icms?: string
+  aliq_icms?: number
+  vl_bc_icms?: number
+  vl_icms?: number
+  aliq_icms_st?: number
+  vl_bc_icms_st?: number
+  vl_icms_st?: number
+  // IPI
+  cst_ipi?: string
+  aliq_ipi?: number
+  vl_ipi?: number
+  // PIS
+  cst_pis: string
+  aliq_pis?: number
+  vl_pis?: number
+  // COFINS
+  cst_cofins: string
+  aliq_cofins?: number
+  vl_cofins?: number
+  // Rastreabilidade
+  numero_lote?: string
+  data_fabricacao?: string
+  data_validade?: string
+  numero_serie_item?: string
+  informacoes_adicionais?: string
+  movimentou_estoque?: boolean
+  itemPedidoCompraId?: number
+  // Relations
+  notaFiscal?: { id_nf: number; numero: string; serie: string; tipo: string }
+  produto?: { id_prod: number; descricao_prod: string }
+}

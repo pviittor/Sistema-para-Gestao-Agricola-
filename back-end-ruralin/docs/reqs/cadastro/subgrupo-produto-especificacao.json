@@ -1,0 +1,100 @@
+{
+  "table": {
+    "name": "C003_SubGrupoProduto",
+    "singularName": "SubGrupoProduto",
+    "pluralName": "SubGruposProduto",
+    "description": "Subgrupos de produtos para organização hierárquica dentro dos grupos",
+    "multiTenant": true,
+    "auditable": true,
+    "cacheable": true
+  },
+  "fields": [
+    {
+      "name": "id_sub",
+      "type": "INTEGER",
+      "required": true,
+      "unique": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID único do subgrupo de produto (auto-increment)"
+    },
+    {
+      "name": "tenantId",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "excludeFromResponse": false,
+      "comment": "ID do tenant ao qual o subgrupo de produto pertence"
+    },
+    {
+      "name": "descricao_sub",
+      "type": "STRING",
+      "required": true,
+      "comment": "Descrição do subgrupo de produto",
+      "validation": {
+        "min": 3,
+        "max": 255
+      }
+    },
+    {
+      "name": "idGrupo",
+      "type": "INTEGER",
+      "required": true,
+      "comment": "ID do grupo de produto ao qual o subgrupo pertence",
+      "validation": {
+        "custom": "IsExists:GrupoProduto,id"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "type": "belongsTo",
+      "target": "GrupoProduto",
+      "foreignKey": "idGrupo",
+      "as": "grupo",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Subgrupo pertence a um Grupo de Produto"
+    }
+  ],
+  "permissions": {
+    "create": "subGrupoProduto.create",
+    "read": "subGrupoProduto.read",
+    "update": "subGrupoProduto.update",
+    "delete": "subGrupoProduto.delete"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 3600,
+    "keys": [
+      "subGrupoProduto:list:*",
+      "subGrupoProduto:findById:*",
+      "subGrupoProduto:findByGrupo:*"
+    ]
+  },
+  "businessRules": [
+    {
+      "type": "crossTenant",
+      "description": "Validar se o GrupoProduto pertence ao mesmo tenant do SubGrupoProduto",
+      "implementation": "No método create() e update() do Application Service, verificar se grupo.tenantId === subGrupo.tenantId antes de salvar. Lançar ForbiddenException se não pertencer ao mesmo tenant."
+    }
+  ],
+  "customMethods": [
+    {
+      "name": "findByGrupo",
+      "type": "repository",
+      "description": "Busca todos os subgrupos de um grupo de produto específico",
+      "parameters": [
+        {
+          "name": "idGrupo",
+          "type": "number",
+          "required": true,
+          "description": "ID do grupo de produto"
+        }
+      ],
+      "returnType": "SubGrupoProduto[]",
+      "cacheKey": "subGrupoProduto:findByGrupo:{idGrupo}"
+    }
+  ]
+}

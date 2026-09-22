@@ -1,0 +1,155 @@
+{
+  "table": {
+    "name": "C015_municipio",
+    "singularName": "Municipio",
+    "pluralName": "Municipios",
+    "description": "Municípios brasileiros (dados globais, não vinculados a tenant)",
+    "multiTenant": false,
+    "auditable": true,
+    "cacheable": true
+  },
+  "fields": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "required": true,
+      "unique": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID único do município (auto-increment)"
+    },
+    {
+      "name": "nome",
+      "type": "STRING",
+      "required": true,
+      "comment": "Nome do município",
+      "validation": {
+        "min": 3,
+        "max": 255
+      }
+    },
+    {
+      "name": "idEstado",
+      "type": "INTEGER",
+      "required": true,
+      "comment": "ID do estado ao qual o município pertence",
+      "validation": {
+        "custom": "IsExists:Estado,id"
+      }
+    },
+    {
+      "name": "codigoIBGE",
+      "type": "INTEGER",
+      "required": false,
+      "unique": true,
+      "comment": "Código do município no IBGE",
+      "validation": {
+        "min": 1000000,
+        "max": 9999999
+      }
+    },
+    {
+      "name": "ativo",
+      "type": "BOOLEAN",
+      "required": false,
+      "defaultValue": true,
+      "comment": "Se o município está ativo"
+    },
+    {
+      "name": "usercreation",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID do usuário que criou o registro"
+    },
+    {
+      "name": "datecreation",
+      "type": "DATE",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "Data de criação do registro"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "belongsTo",
+      "target": "Usuario",
+      "foreignKey": "usercreation",
+      "as": "usuarioCriador",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Município foi criado por um usuário"
+    },
+    {
+      "type": "belongsTo",
+      "target": "Estado",
+      "foreignKey": "idEstado",
+      "as": "estado",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Município pertence a um estado"
+    }
+  ],
+  "permissions": {
+    "create": "municipio.create",
+    "read": "municipio.read",
+    "update": "municipio.update",
+    "delete": "municipio.delete"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 86400,
+    "keys": [
+      "municipio:list:*",
+      "municipio:findById:*",
+      "municipio:findByEstado:*",
+      "municipio:findByCodigoIBGE:*"
+    ]
+  },
+  "businessRules": [
+    {
+      "type": "authorization",
+      "description": "Apenas usuários GOD podem criar, atualizar ou deletar municípios",
+      "implementation": "Usar @RequireRole('GOD') nos métodos create, update e delete do Application Service"
+    },
+    {
+      "type": "data",
+      "description": "Dados globais - não aplica filtro de tenant",
+      "implementation": "Repository deve usar métodos findAllWithoutTenant, findByIdWithoutTenant, etc. para não aplicar filtro de tenant"
+    }
+  ],
+  "customMethods": [
+    {
+      "name": "findByEstado",
+      "type": "repository",
+      "description": "Busca todos os municípios de um estado específico",
+      "parameters": [
+        {
+          "name": "idEstado",
+          "type": "number",
+          "required": true,
+          "description": "ID do estado"
+        }
+      ],
+      "returnType": "Municipio[]",
+      "cacheKey": "municipio:findByEstado:{idEstado}"
+    },
+    {
+      "name": "findByCodigoIBGE",
+      "type": "repository",
+      "description": "Busca um município pelo código IBGE",
+      "parameters": [
+        {
+          "name": "codigoIBGE",
+          "type": "number",
+          "required": true,
+          "description": "Código IBGE do município"
+        }
+      ],
+      "returnType": "Municipio | null",
+      "cacheKey": "municipio:findByCodigoIBGE:{codigoIBGE}"
+    }
+  ]
+}

@@ -1,0 +1,299 @@
+{
+  "table": {
+    "name": "C008_produto",
+    "singularName": "Produto",
+    "pluralName": "Produtos",
+    "description": "Produtos do sistema",
+    "multiTenant": true,
+    "auditable": true,
+    "cacheable": true
+  },
+  "fields": [
+    {
+      "name": "id_prod",
+      "type": "INTEGER",
+      "required": true,
+      "unique": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID único do produto (auto-increment)"
+    },
+    {
+      "name": "tenantId",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "excludeFromResponse": false,
+      "comment": "ID do tenant ao qual o produto pertence"
+    },
+    {
+      "name": "descricao_prod",
+      "type": "STRING",
+      "required": true,
+      "comment": "Descrição do produto",
+      "validation": {
+        "min": 3,
+        "max": 255
+      }
+    },
+    {
+      "name": "idUnidadeMedida",
+      "type": "INTEGER",
+      "required": true,
+      "comment": "ID da unidade de medida",
+      "validation": {
+        "custom": "IsExists:UnidadeMedida,id_unidade"
+      }
+    },
+    {
+      "name": "pesoliquido_prod",
+      "type": "DECIMAL",
+      "required": true,
+      "comment": "Peso líquido do produto",
+      "validation": {
+        "min": 0
+      }
+    },
+    {
+      "name": "idGrupo",
+      "type": "INTEGER",
+      "required": true,
+      "comment": "ID do grupo de produto",
+      "validation": {
+        "custom": "IsExists:GrupoProduto,id"
+      }
+    },
+    {
+      "name": "idSubGrupo",
+      "type": "INTEGER",
+      "required": true,
+      "comment": "ID do subgrupo de produto",
+      "validation": {
+        "custom": "IsExists:SubGrupoProduto,id_sub"
+      }
+    },
+    {
+      "name": "idPrincipioAtivo",
+      "type": "INTEGER",
+      "required": false,
+      "comment": "ID do princípio ativo",
+      "validation": {
+        "custom": "IsExists:PrincipioAtivo,id_principio"
+      }
+    },
+    {
+      "name": "idFabricante",
+      "type": "INTEGER",
+      "required": false,
+      "comment": "ID do fabricante (pessoa)",
+      "validation": {
+        "custom": "IsExists:Pessoa,id_pessoa"
+      }
+    },
+    {
+      "name": "precomedio_prod",
+      "type": "DECIMAL",
+      "required": true,
+      "comment": "Preço médio do produto",
+      "validation": {
+        "min": 0
+      }
+    },
+    {
+      "name": "valorultimaentrada_prod",
+      "type": "DECIMAL",
+      "required": true,
+      "comment": "Valor da última entrada do produto",
+      "validation": {
+        "min": 0
+      }
+    },
+    {
+      "name": "dataultimaentrada_prod",
+      "type": "DATE",
+      "required": false,
+      "comment": "Data da última entrada do produto"
+    },
+    {
+      "name": "combustivel_prod",
+      "type": "BOOLEAN",
+      "required": true,
+      "default": false,
+      "comment": "Indica se o produto é combustível"
+    },
+    {
+      "name": "custoUltimoCusto_prod",
+      "type": "BOOLEAN",
+      "required": true,
+      "default": false,
+      "comment": "Indica se o produto utiliza o último custo"
+    },
+    {
+      "name": "valorUltimoCusto_prod",
+      "type": "DECIMAL",
+      "required": true,
+      "comment": "Valor do último custo do produto",
+      "validation": {
+        "min": 0
+      }
+    },
+    {
+      "name": "atualizacaoCusto_prod",
+      "type": "DATE",
+      "required": false,
+      "comment": "Data de atualização do custo"
+    },
+    {
+      "name": "observacao_prod",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Observações sobre o produto"
+    },
+    {
+      "name": "idIndexador",
+      "type": "INTEGER",
+      "required": false,
+      "comment": "ID do indexador (moeda)",
+      "validation": {
+        "custom": "IsExists:Moeda,id_moeda"
+      }
+    },
+    {
+      "name": "usercreation",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID do usuário que criou o registro"
+    },
+    {
+      "name": "datecreation",
+      "type": "DATE",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "Data de criação do registro"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "belongsTo",
+      "target": "Usuario",
+      "foreignKey": "usercreation",
+      "as": "usuarioCriador",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Produto foi criado por um usuário"
+    },
+    {
+      "type": "belongsTo",
+      "target": "UnidadeMedida",
+      "foreignKey": "idUnidadeMedida",
+      "as": "unidadeMedida",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Produto pertence a uma unidade de medida"
+    },
+    {
+      "type": "belongsTo",
+      "target": "GrupoProduto",
+      "foreignKey": "idGrupo",
+      "as": "grupo",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Produto pertence a um grupo"
+    },
+    {
+      "type": "belongsTo",
+      "target": "SubGrupoProduto",
+      "foreignKey": "idSubGrupo",
+      "as": "subGrupo",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Produto pertence a um subgrupo"
+    },
+    {
+      "type": "belongsTo",
+      "target": "PrincipioAtivo",
+      "foreignKey": "idPrincipioAtivo",
+      "as": "principioAtivo",
+      "required": false,
+      "onDelete": "SET NULL",
+      "comment": "Produto pode ter um princípio ativo"
+    },
+    {
+      "type": "belongsTo",
+      "target": "Pessoa",
+      "foreignKey": "idFabricante",
+      "as": "fabricante",
+      "required": false,
+      "onDelete": "SET NULL",
+      "comment": "Produto pode ter um fabricante"
+    },
+    {
+      "type": "belongsTo",
+      "target": "Moeda",
+      "foreignKey": "idIndexador",
+      "as": "indexador",
+      "required": false,
+      "onDelete": "SET NULL",
+      "comment": "Produto pode ter um indexador (moeda)"
+    }
+  ],
+  "permissions": {
+    "create": "produto.create",
+    "read": "produto.read",
+    "update": "produto.update",
+    "delete": "produto.delete"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 3600,
+    "keys": [
+      "produto:list:*",
+      "produto:findById:*",
+      "produto:findByGrupo:*",
+      "produto:findBySubGrupo:*"
+    ]
+  },
+  "businessRules": [
+    {
+      "type": "crossTenant",
+      "description": "Validar se UnidadeMedida, GrupoProduto, SubGrupoProduto, PrincipioAtivo, Pessoa e Moeda pertencem ao mesmo tenant do Produto",
+      "implementation": "No método create() e update() do Application Service, verificar se todas as entidades relacionadas pertencem ao mesmo tenant antes de salvar. Lançar ForbiddenException se não pertencerem ao mesmo tenant."
+    }
+  ],
+  "customMethods": [
+    {
+      "name": "findByGrupo",
+      "type": "repository",
+      "description": "Busca todos os produtos de um grupo específico",
+      "parameters": [
+        {
+          "name": "idGrupo",
+          "type": "number",
+          "required": true,
+          "description": "ID do grupo"
+        }
+      ],
+      "returnType": "Produto[]",
+      "cacheKey": "produto:findByGrupo:{idGrupo}"
+    },
+    {
+      "name": "findBySubGrupo",
+      "type": "repository",
+      "description": "Busca todos os produtos de um subgrupo específico",
+      "parameters": [
+        {
+          "name": "idSubGrupo",
+          "type": "number",
+          "required": true,
+          "description": "ID do subgrupo"
+        }
+      ],
+      "returnType": "Produto[]",
+      "cacheKey": "produto:findBySubGrupo:{idSubGrupo}"
+    }
+  ]
+}

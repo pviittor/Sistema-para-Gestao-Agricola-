@@ -1,0 +1,96 @@
+{
+  "table": {
+    "name": "C010_servico",
+    "singularName": "ServicoAgricola",
+    "pluralName": "ServicosAgricola",
+    "description": "Serviços agrícolas do sistema",
+    "multiTenant": true,
+    "auditable": true,
+    "cacheable": true
+  },
+  "fields": [
+    {
+      "name": "id_srv",
+      "type": "INTEGER",
+      "required": true,
+      "unique": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID único do serviço agrícola (auto-increment)"
+    },
+    {
+      "name": "tenantId",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "excludeFromResponse": false,
+      "comment": "ID do tenant ao qual o serviço pertence"
+    },
+    {
+      "name": "descricao_srv",
+      "type": "STRING",
+      "required": true,
+      "comment": "Descrição do serviço agrícola",
+      "validation": {
+        "min": 3,
+        "max": 255
+      }
+    },
+    {
+      "name": "financeiro_srv",
+      "type": "BOOLEAN",
+      "required": true,
+      "default": false,
+      "comment": "Indica se o serviço gera movimento financeiro (futuro)"
+    },
+    {
+      "name": "observacao_srv",
+      "type": "TEXT",
+      "required": false,
+      "comment": "Observações sobre o serviço"
+    },
+    {
+      "name": "usercreation",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID do usuário que criou o registro"
+    },
+    {
+      "name": "datecreation",
+      "type": "DATE",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "Data de criação do registro"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "belongsTo",
+      "target": "Usuario",
+      "foreignKey": "usercreation",
+      "as": "usuarioCriador",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Serviço foi criado por um usuário"
+    }
+  ],
+  "permissions": {
+    "create": "servicoAgricola.create",
+    "read": "servicoAgricola.read",
+    "update": "servicoAgricola.update",
+    "delete": "servicoAgricola.delete"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 3600,
+    "keys": [
+      "servicoAgricola:list:*",
+      "servicoAgricola:findById:*"
+    ]
+  },
+  "businessRules": []
+}

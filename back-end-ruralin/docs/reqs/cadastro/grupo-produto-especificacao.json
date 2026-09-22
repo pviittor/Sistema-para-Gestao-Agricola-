@@ -1,0 +1,68 @@
+{
+  "table": {
+    "name": "grupos_produto",
+    "singularName": "GrupoProduto",
+    "pluralName": "GruposProduto",
+    "description": "Grupos de produtos para organização e categorização",
+    "multiTenant": true,
+    "auditable": true,
+    "cacheable": true
+  },
+  "fields": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "required": true,
+      "unique": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID único do grupo de produto (auto-increment)"
+    },
+    {
+      "name": "tenantId",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "excludeFromResponse": false,
+      "comment": "ID do tenant ao qual o grupo de produto pertence"
+    },
+    {
+      "name": "descricao_grupo",
+      "type": "STRING",
+      "required": true,
+      "comment": "Descrição do grupo de produto",
+      "validation": {
+        "min": 3,
+        "max": 255
+      }
+    },
+    {
+      "name": "abreviacao_grupo",
+      "type": "STRING",
+      "required": false,
+      "comment": "Abreviação do grupo de produto",
+      "validation": {
+        "min": 1,
+        "max": 50
+      }
+    }
+  ],
+  "relationships": [],
+  "permissions": {
+    "create": "grupoProduto.create",
+    "read": "grupoProduto.read",
+    "update": "grupoProduto.update",
+    "delete": "grupoProduto.delete"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 3600,
+    "keys": [
+      "grupoProduto:list:*",
+      "grupoProduto:findById:*"
+    ]
+  },
+  "businessRules": [],
+  "customMethods": []
+}

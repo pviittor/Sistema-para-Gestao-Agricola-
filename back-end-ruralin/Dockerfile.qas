@@ -1,0 +1,42 @@
+# Stage 1: Builder
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+# Copiar arquivos de dependências
+COPY package*.json ./
+
+# Instalar todas as dependências (incluindo devDependencies)
+RUN npm ci
+
+# Copiar todo o código fonte
+COPY . .
+
+# Compilar o projeto TypeScript
+RUN npm run build
+
+# Stage 2: Runner (QAS)
+FROM node:22-alpine
+
+WORKDIR /app
+
+# Definir NODE_ENV como production para otimizações (pode ser sobrescrito para 'qas' se necessário)
+ENV NODE_ENV=production
+
+# Copiar arquivos de dependências novamente para instalar apenas produção
+COPY package*.json ./
+
+# Instalar apenas dependências de produção para reduzir o tamanho da imagem
+RUN npm ci --omit=dev
+
+# Copiar os arquivos compilados do estágio builder
+COPY --from=builder /app/dist ./dist
+
+# Expor a porta da aplicação (padrão 3000, ajustável via env PORT)
+EXPOSE 3000
+
+# Usuário não-root para segurança
+USER node
+
+# Comando de inicialização
+CMD ["npm", "start"]

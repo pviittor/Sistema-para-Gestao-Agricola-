@@ -1,0 +1,178 @@
+{
+  "table": {
+    "name": "eventos",
+    "singularName": "Evento",
+    "pluralName": "Eventos",
+    "description": "Eventos agendados pelos usuários do sistema",
+    "multiTenant": true,
+    "auditable": true,
+    "cacheable": true
+  },
+  "fields": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "required": true,
+      "unique": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID único do evento (auto-increment)"
+    },
+    {
+      "name": "tenantId",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "excludeFromResponse": false,
+      "comment": "ID do tenant ao qual o evento pertence"
+    },
+    {
+      "name": "usuarioId",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID do usuário que criou o evento"
+    },
+    {
+      "name": "titulo",
+      "type": "STRING",
+      "required": true,
+      "comment": "Título do evento",
+      "validation": {
+        "min": 3,
+        "max": 255
+      }
+    },
+    {
+      "name": "descricao",
+      "type": "TEXT",
+      "required": true,
+      "comment": "Descrição detalhada do evento"
+    },
+    {
+      "name": "data",
+      "type": "DATEONLY",
+      "required": true,
+      "comment": "Data do evento (formato: YYYY-MM-DD)",
+      "validation": {
+        "custom": "IsDateString"
+      }
+    },
+    {
+      "name": "horario_inicio",
+      "type": "TIME",
+      "required": true,
+      "comment": "Horário de início do evento (formato: HH:mm:ss)",
+      "validation": {
+        "pattern": "^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$",
+        "custom": "IsTime"
+      }
+    },
+    {
+      "name": "horario_fim",
+      "type": "TIME",
+      "required": true,
+      "comment": "Horário de fim do evento (formato: HH:mm:ss). Deve ser posterior ao horário de início",
+      "validation": {
+        "pattern": "^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$",
+        "custom": "IsTimeAfter:horario_inicio,data"
+      }
+    },
+    {
+      "name": "localId",
+      "type": "INTEGER",
+      "required": true,
+      "comment": "ID do local onde o evento ocorrerá",
+      "validation": {
+        "custom": "IsExists:Local,id"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "type": "belongsTo",
+      "target": "Local",
+      "foreignKey": "localId",
+      "as": "local",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Evento pertence a um Local"
+    },
+    {
+      "type": "belongsTo",
+      "target": "Usuario",
+      "foreignKey": "usuarioId",
+      "as": "usuario",
+      "required": true,
+      "onDelete": "CASCADE",
+      "comment": "Evento pertence a um Usuario"
+    }
+  ],
+  "permissions": {
+    "create": "evento.create",
+    "read": "evento.read",
+    "update": "evento.update",
+    "delete": "evento.delete"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 3600,
+    "keys": [
+      "evento:list:*",
+      "evento:findByLocal:*",
+      "evento:findByData:*"
+    ]
+  },
+  "businessRules": [
+    {
+      "type": "crossTenant",
+      "description": "Validar se o Local pertence ao mesmo tenant do Evento",
+      "implementation": "No método create() e update() do Application Service, verificar se local.tenantId === evento.tenantId antes de salvar. Lançar ForbiddenException se não pertencer ao mesmo tenant."
+    },
+    {
+      "type": "validation",
+      "description": "Validar se horário de fim é posterior ao horário de início",
+      "implementation": "Usar validador customizado IsTimeAfter que compara horario_fim com horario_inicio considerando também a data do evento."
+    }
+  ],
+  "customMethods": [
+    {
+      "name": "findByLocal",
+      "type": "repository",
+      "description": "Busca todos os eventos de um local específico, ordenados por data e horário de início",
+      "parameters": [
+        {
+          "name": "localId",
+          "type": "number",
+          "required": true,
+          "description": "ID do local"
+        }
+      ],
+      "returnType": "Evento[]",
+      "cacheKey": "evento:findByLocal:{localId}"
+    },
+    {
+      "name": "findByData",
+      "type": "repository",
+      "description": "Busca eventos em um período de datas (inclusive)",
+      "parameters": [
+        {
+          "name": "dataInicio",
+          "type": "string|Date",
+          "required": true,
+          "description": "Data de início do período (formato: YYYY-MM-DD)"
+        },
+        {
+          "name": "dataFim",
+          "type": "string|Date",
+          "required": true,
+          "description": "Data de fim do período (formato: YYYY-MM-DD)"
+        }
+      ],
+      "returnType": "Evento[]",
+      "cacheKey": "evento:findByData:{dataInicio}:{dataFim}"
+    }
+  ]
+}

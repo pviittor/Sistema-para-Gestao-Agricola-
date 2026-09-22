@@ -1,0 +1,32 @@
+export class ReciboResponseDto {
+  id!: number;
+  tenantId!: number;
+  serie!: string;
+  numero!: number;
+  numeroFormatado!: string;
+  nomeEmitente!: string;
+  documentoEmitente?: string | null;
+  nomeBeneficiario!: string;
+  documentoBeneficiario?: string | null;
+  valor!: number;
+  valorExtenso!: string;
+  descricao!: string;
+  formaPagamento!: string;
+  dataEmissao!: string;
+  local?: string | null;
+  observacoes?: string | null;
+  status!: string;
+  motivoCancelamento?: string | null;
+  usuarioCancelamentoId?: number | null;
+  dataCancelamento?: Date | string | null;
+  tipoVinculo?: string;
+  tituloPagarId?: number | null;
+  tituloReceberId?: number | null;
+  parcelaId?: number | null;
+  quantidadeImpressoes!: number;
+  usercreation?: number | null;
+  createdAt!: string;
+  updatedAt!: string;
+  tituloPagar?: any;
+  tituloReceber?: any;
+}

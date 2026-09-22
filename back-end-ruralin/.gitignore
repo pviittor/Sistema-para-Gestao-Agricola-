@@ -1,0 +1,8 @@
+# RAM MCP data
+data/
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/

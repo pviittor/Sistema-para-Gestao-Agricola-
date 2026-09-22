@@ -1,0 +1,139 @@
+{
+  "table": {
+    "name": "C014_estado",
+    "singularName": "Estado",
+    "pluralName": "Estados",
+    "description": "Estados brasileiros (dados globais, não vinculados a tenant)",
+    "multiTenant": false,
+    "auditable": true,
+    "cacheable": true
+  },
+  "fields": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "required": true,
+      "unique": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID único do estado (auto-increment)"
+    },
+    {
+      "name": "sigla",
+      "type": "STRING",
+      "required": true,
+      "unique": true,
+      "comment": "Sigla do estado (ex: SP, RJ, MG)",
+      "validation": {
+        "min": 2,
+        "max": 2
+      }
+    },
+    {
+      "name": "nome",
+      "type": "STRING",
+      "required": true,
+      "comment": "Nome completo do estado",
+      "validation": {
+        "min": 3,
+        "max": 100
+      }
+    },
+    {
+      "name": "codigoIBGE",
+      "type": "INTEGER",
+      "required": false,
+      "unique": true,
+      "comment": "Código do estado no IBGE",
+      "validation": {
+        "min": 1,
+        "max": 99
+      }
+    },
+    {
+      "name": "ativo",
+      "type": "BOOLEAN",
+      "required": false,
+      "defaultValue": true,
+      "comment": "Se o estado está ativo"
+    },
+    {
+      "name": "usercreation",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID do usuário que criou o registro"
+    },
+    {
+      "name": "datecreation",
+      "type": "DATE",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "Data de criação do registro"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "belongsTo",
+      "target": "Usuario",
+      "foreignKey": "usercreation",
+      "as": "usuarioCriador",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Estado foi criado por um usuário"
+    },
+    {
+      "type": "hasMany",
+      "target": "Municipio",
+      "foreignKey": "idEstado",
+      "as": "municipios",
+      "comment": "Municípios do estado"
+    }
+  ],
+  "permissions": {
+    "create": "estado.create",
+    "read": "estado.read",
+    "update": "estado.update",
+    "delete": "estado.delete"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 86400,
+    "keys": [
+      "estado:list:*",
+      "estado:findById:*",
+      "estado:findBySigla:*"
+    ]
+  },
+  "businessRules": [
+    {
+      "type": "authorization",
+      "description": "Apenas usuários GOD podem criar, atualizar ou deletar estados",
+      "implementation": "Usar @RequireRole('GOD') nos métodos create, update e delete do Application Service"
+    },
+    {
+      "type": "data",
+      "description": "Dados globais - não aplica filtro de tenant",
+      "implementation": "Repository deve usar métodos findAllWithoutTenant, findByIdWithoutTenant, etc. para não aplicar filtro de tenant"
+    }
+  ],
+  "customMethods": [
+    {
+      "name": "findBySigla",
+      "type": "repository",
+      "description": "Busca um estado pela sigla",
+      "parameters": [
+        {
+          "name": "sigla",
+          "type": "string",
+          "required": true,
+          "description": "Sigla do estado (ex: SP, RJ)"
+        }
+      ],
+      "returnType": "Estado | null",
+      "cacheKey": "estado:findBySigla:{sigla}"
+    }
+  ]
+}

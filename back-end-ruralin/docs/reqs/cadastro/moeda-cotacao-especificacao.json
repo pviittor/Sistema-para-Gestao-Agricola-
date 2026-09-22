@@ -1,0 +1,131 @@
+{
+  "table": {
+    "name": "C007_moedaCotacao",
+    "singularName": "MoedaCotacao",
+    "pluralName": "MoedasCotacao",
+    "description": "Cotações de moedas",
+    "multiTenant": true,
+    "auditable": false,
+    "cacheable": true
+  },
+  "fields": [
+    {
+      "name": "id_cotacao",
+      "type": "INTEGER",
+      "required": true,
+      "unique": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID único da cotação (auto-increment)"
+    },
+    {
+      "name": "tenantId",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "excludeFromResponse": false,
+      "comment": "ID do tenant ao qual a cotação pertence"
+    },
+    {
+      "name": "idMoeda",
+      "type": "INTEGER",
+      "required": true,
+      "comment": "ID da moeda relacionada",
+      "validation": {
+        "custom": "IsExists:Moeda,id_moeda"
+      }
+    },
+    {
+      "name": "data_cotacao",
+      "type": "DATE",
+      "required": true,
+      "comment": "Data da cotação",
+      "validation": {
+        "custom": "IsDateString"
+      }
+    },
+    {
+      "name": "valor_cotacao",
+      "type": "DECIMAL",
+      "required": true,
+      "comment": "Valor da cotação",
+      "validation": {
+        "min": 0
+      }
+    },
+    {
+      "name": "fechamento_cotaca",
+      "type": "BOOLEAN",
+      "required": true,
+      "default": false,
+      "comment": "Indica se é fechamento oficial (preço de ajuste)"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "belongsTo",
+      "target": "Moeda",
+      "foreignKey": "idMoeda",
+      "as": "moeda",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Cotação pertence a uma Moeda"
+    }
+  ],
+  "permissions": {
+    "create": "moedaCotacao.create",
+    "read": "moedaCotacao.read",
+    "update": "moedaCotacao.update",
+    "delete": "moedaCotacao.delete"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 3600,
+    "keys": [
+      "moedaCotacao:list:*",
+      "moedaCotacao:findById:*",
+      "moedaCotacao:findByMoeda:*",
+      "moedaCotacao:findByData:*"
+    ]
+  },
+  "businessRules": [
+    {
+      "type": "crossTenant",
+      "description": "Validar se a Moeda pertence ao mesmo tenant da Cotação",
+      "implementation": "No método create() e update() do Application Service, verificar se moeda.tenantId === cotacao.tenantId antes de salvar. Lançar ForbiddenException se não pertencer ao mesmo tenant."
+    }
+  ],
+  "customMethods": [
+    {
+      "name": "findByMoeda",
+      "type": "repository",
+      "description": "Busca todas as cotações de uma moeda específica, ordenadas por data",
+      "parameters": [
+        {
+          "name": "idMoeda",
+          "type": "number",
+          "required": true,
+          "description": "ID da moeda"
+        }
+      ],
+      "returnType": "MoedaCotacao[]",
+      "cacheKey": "moedaCotacao:findByMoeda:{idMoeda}"
+    },
+    {
+      "name": "findByData",
+      "type": "repository",
+      "description": "Busca cotações em uma data específica",
+      "parameters": [
+        {
+          "name": "data",
+          "type": "string|Date",
+          "required": true,
+          "description": "Data da cotação (formato: YYYY-MM-DD)"
+        }
+      ],
+      "returnType": "MoedaCotacao[]",
+      "cacheKey": "moedaCotacao:findByData:{data}"
+    }
+  ]
+}

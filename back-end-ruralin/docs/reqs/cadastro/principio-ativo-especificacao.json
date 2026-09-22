@@ -1,0 +1,94 @@
+{
+  "table": {
+    "name": "C004_PrincipioAtivo",
+    "singularName": "PrincipioAtivo",
+    "pluralName": "PrincipiosAtivo",
+    "description": "Princípios ativos de produtos agrícolas",
+    "multiTenant": true,
+    "auditable": true,
+    "cacheable": true
+  },
+  "fields": [
+    {
+      "name": "id_principio",
+      "type": "INTEGER",
+      "required": true,
+      "unique": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID único do princípio ativo (auto-increment)"
+    },
+    {
+      "name": "tenantId",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "excludeFromResponse": false,
+      "comment": "ID do tenant ao qual o princípio ativo pertence"
+    },
+    {
+      "name": "descricao_principio",
+      "type": "STRING",
+      "required": true,
+      "comment": "Descrição do princípio ativo",
+      "validation": {
+        "min": 3,
+        "max": 255
+      }
+    },
+    {
+      "name": "classe_principio",
+      "type": "STRING",
+      "required": false,
+      "comment": "Classe do princípio ativo",
+      "validation": {
+        "min": 1,
+        "max": 100
+      }
+    },
+    {
+      "name": "usercreation",
+      "type": "INTEGER",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "ID do usuário que criou o registro"
+    },
+    {
+      "name": "datecreation",
+      "type": "DATE",
+      "required": true,
+      "excludeFromCreate": true,
+      "excludeFromUpdate": true,
+      "comment": "Data de criação do registro"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "belongsTo",
+      "target": "Usuario",
+      "foreignKey": "usercreation",
+      "as": "usuarioCriador",
+      "required": true,
+      "onDelete": "RESTRICT",
+      "comment": "Princípio ativo foi criado por um usuário"
+    }
+  ],
+  "permissions": {
+    "create": "principioAtivo.create",
+    "read": "principioAtivo.read",
+    "update": "principioAtivo.update",
+    "delete": "principioAtivo.delete"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 3600,
+    "keys": [
+      "principioAtivo:list:*",
+      "principioAtivo:findById:*"
+    ]
+  },
+  "businessRules": [],
+  "customMethods": []
+}
